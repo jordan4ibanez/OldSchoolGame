@@ -1,0 +1,135 @@
+
+--[[
+Game name: New Hampshire Survival
+
+setting: woods
+premise:  you are broken down in your car in the middle of new hampshire, usa, you have limited resources
+and you must survive using only the things around you
+player challenges: manage health, hunger, thirst, and fire, time
+
+gui elements: hunger, thirts, time, date, wood, fire, food, water
+
+random ideas: sleep, alcohol ( accelerates time, but increases thirst and hunger, makes your health go down)
+sleep acclerates time 9 hours, but decreases health and thirst
+]]--
+math.randomseed(os.time())
+
+local survival = {}
+
+--make time it's own thing
+survival.Hunger = math.random(70,100)
+survival.Thirst = math.random(50,100)
+survival.Fuel   = math.random(30,100)
+survival.Meat   = math.random(50,100)
+survival.Water  = math.random(50,100)
+resource_tick   = 0
+
+local activities = {}
+
+activities.Hunger = {"h",false} --"player is eating" - 1 hour
+activities.Thirst = {"t",false} --"player is drinking" 5 minutes
+activities.Fuel = {"f",false} --"player is gathering wood" 5 hours
+activities.Meat = {"m",false} --"player is hunting for meat" 10 hours
+activities.Water = {"w",false} --"player is fetching a bucket of water" 2 hours
+
+
+local time_management  = {}
+time_management.minute = 0
+time_management.hour   = 0
+time_management.day    = 1
+time_management.tick   = 0
+
+
+
+function time_tick(dt)
+--[[
+	time_management.tick = time_management.tick + dt
+	
+	if time_management.tick >= 0.5 then
+		time_management.tick = 0 --reset the tick
+		
+		time_management.minute = time_management.minute + 1
+		if time_management.minute >= 60 then
+			time_management.minute = 0
+			time_management.hour   = time_management.hour + 1
+			if time_management.hour >= 24 then
+				time_management.hour = 0
+				time_management.day = time_management.day + 1
+			end
+		end
+	end
+]]--
+end
+
+function take_away_stats(dt)
+--[[
+	resource_tick = resource_tick + dt
+	if resource_tick >= 0.25 then
+		resource_tick = 0 --reset the tick
+		for i,y in pairs(survival) do
+			if i == keyer and y < 100 then
+				survival[tostring(i)] = survival[tostring(i)] + 1
+			else
+				if math.random() > 0.7 and i ~= keyer then
+					survival[tostring(i)] = survival[tostring(i)] - 1
+				break
+			end
+		end
+		--x = x + 1
+	end
+		
+	end
+]]--
+end
+
+function love.load()
+	love.graphics.setNewFont(20)
+end
+
+function love.draw(dt)
+	love.graphics.print(tostring(math.random(0,2147483647)), 20,30)
+	love.graphics.print(tostring(love.math.noise( math.random(),math.random())),10,10)
+--[[
+	--simple way to add 0 to single digit minute count
+	local minute = tostring(time_management.minute)
+	if string.len(minute) < 2 then	
+		minute = "0"..minute
+	end
+	love.graphics.print("Day: "..time_management.day.." Time: "..time_management.hour..":"..minute, 10,10)
+	
+	local x = 0
+	for i,y in pairs(survival) do
+		if i == keyer then
+			love.graphics.setColor( 255, 0, 0 )
+		else
+			love.graphics.setColor( 255, 255, 255 )
+		end
+
+
+		love.graphics.print(tostring(i)..": "..tostring(y), 10,50 + (35*x))
+		x = x + 1
+	end
+	
+	love.graphics.print(tostring(keyer), 500,500)
+]]--
+end
+
+function love.update(dt)
+--[[
+	time_tick(dt)
+	take_away_stats(dt) 
+]]--
+end
+
+keyer = nil
+--handle keyboard input
+function love.keypressed(key, unicode)
+    -- ignore non-printable characters (see http://www.ascii-code.com/)
+    for a,b in pairs(activities) do
+		
+		if b[1] == key then
+			keyer = a
+		end
+    end
+end
+ 
