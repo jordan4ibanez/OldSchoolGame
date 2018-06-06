@@ -70,9 +70,9 @@ function love.rendermap(x,y)
 			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw
 			local posy = ((yer-y+1)*map.tilesize)-map.tilesize + graphics.sch
 			if map.loadedblock[tostring(yer)][tostring(xer)] == 0 then
-				love.graphics.draw(graphics.brick, posx,posy) 
-			elseif map.loadedblock[tostring(yer)][tostring(xer)] == 1 then
 				love.graphics.draw(graphics.cobble, posx,posy) 
+			elseif map.loadedblock[tostring(yer)][tostring(xer)] == 1 then
+				love.graphics.draw(graphics.brick, posx,posy) 
 			end
 		
 		end
@@ -118,7 +118,8 @@ function love.keypressed(key, unicode)
 		player.aimx = 0
 		player.aimy = 0
 	end
-
+	local lastposx = player.x
+	local lastposy = player.y
     if key == "up" then
 		if player.y > 1 then
 			player.y = player.y - 1
@@ -139,6 +140,12 @@ function love.keypressed(key, unicode)
 		if player.x < map.blocksize then
 			player.x = player.x + 1
 		end
+	end
+	
+	--simple collision test
+	if map.loadedblock[tostring(player.y)][tostring(player.x)] ~= 0 then
+		player.x = lastposx
+		player.y = lastposy
 	end
 
 	if key == "w" or key == "s" then
