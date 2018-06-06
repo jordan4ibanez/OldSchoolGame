@@ -109,10 +109,6 @@ end
 
 --handle keyboard input
 function love.keypressed(key, unicode)
-	if key == "up" or key == "down" or key == "left" or key == "right" then
-		player.aimx = 0
-		player.aimy = 0
-	end
 	--use this to call if colliding
 	local lastposx = player.x
 	local lastposy = player.y
@@ -144,6 +140,8 @@ function love.keypressed(key, unicode)
 		player.y = lastposy
 	end
 
+
+	--aiming
 	if key == "w" or key == "s" then
 		player.aimx = 0
 	end
@@ -166,7 +164,6 @@ function love.keypressed(key, unicode)
 		end
 	end
 	if key == "a" then
-		--return if aimed, else aim
 		if player.aimx < 0 then
 			player.aimx = 0
 		else
@@ -181,5 +178,19 @@ function love.keypressed(key, unicode)
 		end
 	end
 
+	if key == "space" then
+		love.breakblock()
+	end
 end
- 
+
+
+function love.breakblock()
+	if player.aimx ~= 0 or player.aimy ~= 0 then
+		local y = player.y+player.aimy
+		local x = player.x+player.aimx
+		
+		if x > 0 and x <= map.blocksize and y > 0 and y <= map.blocksize then
+			map.loadedblock[tostring(y)][tostring(x)] = 0
+		end
+	end
+end
