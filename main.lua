@@ -37,18 +37,35 @@ function love.load()
     graphics.brick = love.graphics.newImage("brick_brown_0.png")
     graphics.player = love.graphics.newImage("player.png")
  --   end
+	love.generateblock(dt,1,1)
 	
 end
 
 function love.draw(dt)
 	--love.graphics.print(tostring(math.maxinteger), 40,50)
 	--love.graphics.print(tostring(love.math.noise( 100/map.blocksize,100/map.blocksize)),10,60)
-	love.generateblock(dt,1,1)
-	love.graphics.draw(graphics.player, (player.x*map.tilesize)-map.tilesize, (player.y*map.tilesize)-map.tilesize)
+	love.rendermap(player.x,player.y)
+	love.graphics.draw(graphics.player, 0,0)--(player.x*map.tilesize)-map.tilesize, (player.y*map.tilesize)-map.tilesize)
 end
 
 function love.update(dt)
 
+end
+
+function love.rendermap(x,y)
+	for yer = 1,map.blocksize do
+		for xer = 1,map.blocksize do
+			local posx = ((xer-x+1)*map.tilesize)-map.tilesize
+			local posy = ((yer-y+1)*map.tilesize)-map.tilesize
+			if map.loadedblock[tostring(yer)][tostring(xer)] == 0 then
+				love.graphics.draw(graphics.brick, posx,posy) 
+			elseif map.loadedblock[tostring(yer)][tostring(xer)] == 1 then
+				love.graphics.draw(graphics.cobble, posx,posy) 
+			end
+		
+		end
+	end
+	
 end
 
 --generates map block in memory
@@ -64,12 +81,13 @@ function love.generateblock(dt,x,y)
 			local value = love.math.noise(xer,yer )
 			if value > 0.4 then
 				--love.graphics.setColor( 255, 255, 255 )
-				map.loadedblock[tostring(yer)][tostring(xer)]
+				map.loadedblock[tostring(yer)][tostring(xer)] = 1
 				--love.graphics.draw(graphics.cobble, (xer*map.tilesize)-map.tilesize, (yer*map.tilesize)-map.tilesize)
 				--love.graphics.print("O",(xer*17),(yer*17))
 			else
 				--love.graphics.setColor( 255, 0, 0 )
-				love.graphics.draw(graphics.brick, (xer*map.tilesize)-map.tilesize, (yer*map.tilesize)-map.tilesize)
+				--love.graphics.draw(graphics.brick, (xer*map.tilesize)-map.tilesize, (yer*map.tilesize)-map.tilesize)
+				map.loadedblock[tostring(yer)][tostring(xer)] = 0
 			end
 		end
 	end
