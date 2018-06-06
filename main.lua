@@ -99,13 +99,8 @@ end
 
 --this draws the "crosshairs"
 function love.drawcrosshairs()
-	--player.aimx = 0--aim direction
-	--player.aimy = 0
-	--love.graphics.rectangle( "fill", 32, 32, 32, 32 )
 	love.graphics.setColor( 255, 0, 0 )
-
 	if player.aimx ~= 0 or player.aimy ~= 0 then
-		--love.graphics.draw(graphics.player,graphics.scw,graphics.sch)
 		love.graphics.rectangle( "line", graphics.scw+(map.tilesize*player.aimx), graphics.sch+(map.tilesize*player.aimy), map.tilesize, map.tilesize)
 	end
 	love.graphics.setColor( 255, 255, 255 )
