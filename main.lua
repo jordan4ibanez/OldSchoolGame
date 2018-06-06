@@ -18,10 +18,14 @@ map.blocksize = 30 --length and width
 map.loadedblock = {}
 map.tilesize = 32
 
+--player class
 player = {}
-player.x = 5
+player.x = 5--position
 player.y = 10
+player.aiml = 0--aim direction
+player.aimr = 0
 
+--graphics class
 graphics = {}
 
 
@@ -35,33 +39,30 @@ function love.load()
 	love.window.setMode( map.tilesize*21, map.tilesize*21 )
 	
 	love.graphics.setNewFont(20)
-	
- 
-    --if success then
-        -- If the game is fused and it's located in C:\Program Files\mycoolgame\,
-        -- then we can now load files from that path.
+
     graphics.cobble = love.graphics.newImage("cobble_blood_1_new.png")
     graphics.brick = love.graphics.newImage("brick_brown_0.png")
     graphics.player = love.graphics.newImage("player.png")
- --   end
+
 	love.generateblock(dt,1,1)
-	
 end
 
 function love.draw(dt)
 	love.rendermap(player.x,player.y)
-	love.graphics.draw(graphics.player,graphics.scw,graphics.sch)--(player.x*map.tilesize)-map.tilesize, (player.y*map.tilesize)-map.tilesize)
+	love.graphics.draw(graphics.player,graphics.scw,graphics.sch)
 	--this is a debug to show the center of the screen
 	--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
 end
 
 function love.update(dt)
+	--update screen integers 
 	graphics.screenh = love.graphics.getHeight()
 	graphics.screenw = love.graphics.getWidth()
 	graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
 	graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
 end
 
+--this draws the mapblock
 function love.rendermap(x,y)
 	for yer = 1,map.blocksize do
 		for xer = 1,map.blocksize do
@@ -81,22 +82,14 @@ end
 --generates map block in memory
 function love.generateblock(dt,x,y)
 	map.loadedblock = {}
-	
-	
 	for yer = 1,map.blocksize do
-		print("test")
 		map.loadedblock[tostring(yer)] = {}
 		for xer = 1,map.blocksize do
 			--map.loadedblock[yer][xer] =
 			local value = love.math.noise(xer,yer )
 			if value > 0.4 then
-				--love.graphics.setColor( 255, 255, 255 )
 				map.loadedblock[tostring(yer)][tostring(xer)] = 1
-				--love.graphics.draw(graphics.cobble, (xer*map.tilesize)-map.tilesize, (yer*map.tilesize)-map.tilesize)
-				--love.graphics.print("O",(xer*17),(yer*17))
 			else
-				--love.graphics.setColor( 255, 0, 0 )
-				--love.graphics.draw(graphics.brick, (xer*map.tilesize)-map.tilesize, (yer*map.tilesize)-map.tilesize)
 				map.loadedblock[tostring(yer)][tostring(xer)] = 0
 			end
 		end
@@ -128,11 +121,15 @@ function love.keypressed(key, unicode)
 			player.x = player.x + 1
 		end
 	end
-    --for a,b in pairs(activities) do
-		
-		--if b[1] == key then
-			--keyer = a
-		--end
-    --end
+
+	if key == "w" then
+	end
+	if key == "s" then
+	end
+	if key == "a" then
+	end
+	if key == "d" then
+	end
+
 end
  
