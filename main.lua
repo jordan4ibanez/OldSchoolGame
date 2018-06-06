@@ -22,8 +22,8 @@ map.tilesize = 32
 player = {}
 player.x = 5--position
 player.y = 10
-player.aiml = 0--aim direction
-player.aimr = 0
+player.aimx = 0--aim direction
+player.aimy = 0
 
 --graphics class
 graphics = {}
@@ -52,6 +52,7 @@ function love.draw(dt)
 	love.graphics.draw(graphics.player,graphics.scw,graphics.sch)
 	--this is a debug to show the center of the screen
 	--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
+	love.drawcrosshairs()
 end
 
 function love.update(dt)
@@ -96,10 +97,28 @@ function love.generateblock(dt,x,y)
 	end
 end
 
+--this draws the "crosshairs"
+function love.drawcrosshairs()
+	--player.aimx = 0--aim direction
+	--player.aimy = 0
+	--love.graphics.rectangle( "fill", 32, 32, 32, 32 )
+	love.graphics.setColor( 255, 0, 0 )
+
+	if player.aimx ~= 0 or player.aimy ~= 0 then
+		--love.graphics.draw(graphics.player,graphics.scw,graphics.sch)
+		love.graphics.rectangle( "line", graphics.scw+(map.tilesize*player.aimx), graphics.sch+(map.tilesize*player.aimy), map.tilesize, map.tilesize)
+	end
+	love.graphics.setColor( 255, 255, 255 )
+end
 
 
 --handle keyboard input
 function love.keypressed(key, unicode)
+	if key == "up" or key == "down" or key == "left" or key == "right" then
+		player.aimx = 0
+		player.aimy = 0
+	end
+
     if key == "up" then
 		if player.y > 1 then
 			player.y = player.y - 1
@@ -122,13 +141,41 @@ function love.keypressed(key, unicode)
 		end
 	end
 
+	if key == "w" or key == "s" then
+		player.aimx = 0
+	end
+	if key == "a" or key == "d" then
+		player.aimy = 0
+	end
 	if key == "w" then
+		--return if aimed, else aim
+		if player.aimy < 0 then
+			player.aimy = 0
+		else
+			player.aimy = -1
+		end
 	end
 	if key == "s" then
+		if player.aimy > 0 then
+			player.aimy = 0
+		else
+			player.aimy = 1
+		end
 	end
 	if key == "a" then
+		--return if aimed, else aim
+		if player.aimx < 0 then
+			player.aimx = 0
+		else
+			player.aimx = -1
+		end
 	end
 	if key == "d" then
+		if player.aimx > 0 then
+			player.aimx = 0
+		else
+			player.aimx = 1
+		end
 	end
 
 end
