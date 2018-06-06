@@ -118,6 +118,7 @@ function love.keypressed(key, unicode)
 		player.aimx = 0
 		player.aimy = 0
 	end
+	--use this to call if colliding
 	local lastposx = player.x
 	local lastposy = player.y
     if key == "up" then
@@ -142,7 +143,7 @@ function love.keypressed(key, unicode)
 		end
 	end
 	
-	--simple collision test
+	--simple collision correction
 	if map.loadedblock[tostring(player.y)][tostring(player.x)] ~= 0 then
 		player.x = lastposx
 		player.y = lastposy
