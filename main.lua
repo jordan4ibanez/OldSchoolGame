@@ -1,4 +1,6 @@
 
+
+
 math.randomseed(os.time())
 
 local survival = {}
@@ -21,10 +23,7 @@ player.x = 5
 player.y = 10
 
 graphics = {}
-graphics.screenh = love.graphics.getHeight()
-graphics.screenw = love.graphics.getWidth()
-graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
-graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
+
 
 
 function time_tick(dt)
@@ -32,6 +31,9 @@ function time_tick(dt)
 end
 
 function love.load()
+	--keep the multiplier odd to render out all possible tiles
+	love.window.setMode( map.tilesize*21, map.tilesize*21 )
+	
 	love.graphics.setNewFont(20)
 	
  
@@ -54,7 +56,10 @@ function love.draw(dt)
 end
 
 function love.update(dt)
-
+	graphics.screenh = love.graphics.getHeight()
+	graphics.screenw = love.graphics.getWidth()
+	graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
+	graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
 end
 
 function love.rendermap(x,y)
