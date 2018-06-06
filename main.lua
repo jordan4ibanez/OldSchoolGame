@@ -12,15 +12,20 @@ survival.Water  = math.random(50,100)
 resource_tick   = 0
 
 map = {}
-map.blocksize = 11 --length and width
+map.blocksize = 30 --length and width
 map.loadedblock = {}
 map.tilesize = 32
 
 player = {}
-player.x = 1
-player.y = 1
+player.x = 5
+player.y = 10
 
 graphics = {}
+graphics.screenh = love.graphics.getHeight()
+graphics.screenw = love.graphics.getWidth()
+graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
+graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
+
 
 function time_tick(dt)
 
@@ -42,10 +47,10 @@ function love.load()
 end
 
 function love.draw(dt)
-	--love.graphics.print(tostring(math.maxinteger), 40,50)
-	--love.graphics.print(tostring(love.math.noise( 100/map.blocksize,100/map.blocksize)),10,60)
 	love.rendermap(player.x,player.y)
-	love.graphics.draw(graphics.player, 0,0)--(player.x*map.tilesize)-map.tilesize, (player.y*map.tilesize)-map.tilesize)
+	love.graphics.draw(graphics.player,graphics.scw,graphics.sch)--(player.x*map.tilesize)-map.tilesize, (player.y*map.tilesize)-map.tilesize)
+	--this is a debug to show the center of the screen
+	--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
 end
 
 function love.update(dt)
@@ -55,8 +60,8 @@ end
 function love.rendermap(x,y)
 	for yer = 1,map.blocksize do
 		for xer = 1,map.blocksize do
-			local posx = ((xer-x+1)*map.tilesize)-map.tilesize
-			local posy = ((yer-y+1)*map.tilesize)-map.tilesize
+			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw
+			local posy = ((yer-y+1)*map.tilesize)-map.tilesize + graphics.sch
 			if map.loadedblock[tostring(yer)][tostring(xer)] == 0 then
 				love.graphics.draw(graphics.brick, posx,posy) 
 			elseif map.loadedblock[tostring(yer)][tostring(xer)] == 1 then
