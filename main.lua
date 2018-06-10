@@ -44,6 +44,8 @@ function love.load()
     graphics.brick = love.graphics.newImage("brick_brown_0.png")
     graphics.player = love.graphics.newImage("player.png")
 
+	footstep = love.audio.newSource("footstep.wav", "static" )
+
 	love.generateblock(dt,1,1)
 end
 
@@ -138,6 +140,9 @@ function love.keypressed(key, unicode)
 	if map.loadedblock[tostring(player.y)][tostring(player.x)] ~= 0 then
 		player.x = lastposx
 		player.y = lastposy
+	elseif player.x ~= lastposx or player.y ~= lastposy then --play sound
+		love.audio.stop(footstep)
+		love.audio.play(footstep)
 	end
 
 
