@@ -36,7 +36,7 @@ end
 
 function love.load()
 	--keep the multiplier odd to render out all possible tiles
-	love.window.setMode( map.tilesize*21, map.tilesize*21 )
+	love.window.setMode( 0, 0, {resizable=true,fullscreen=false} )
 	
 	love.graphics.setNewFont(20)
 
@@ -55,6 +55,10 @@ function love.draw(dt)
 	--this is a debug to show the center of the screen
 	--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
 	love.drawcrosshairs()
+	
+	--debug info
+	local lwidth,lheight = love.window.getMode()
+	love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL", 0,lheight-120)
 end
 
 function love.update(dt)
@@ -186,6 +190,20 @@ function love.keypressed(key, unicode)
 	if key == "space" then
 		love.breakblock()
 	end
+	
+	--end game
+	if key == 'escape' then
+		love.event.quit()
+	end
+	if key == "lctrl" then
+		print("Game has been reset")
+		love.event.quit("restart")
+	end
+   --resize window
+	if key == "`" then
+		local width, height, flags = love.window.getMode( )
+		love.window.setMode( width, height, {fullscreen=not flags.fullscreen,resizable=true})
+	end 
 end
 
 
