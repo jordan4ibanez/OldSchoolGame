@@ -27,7 +27,7 @@ function love.keypressed(key, unicode)
 	end
 	
 	--simple collision correction
-	--if map.loadedblock[tostring(player.y)][tostring(player.x)] ~= 0 then
+	--if map.loadedblock[player.y][player.x] ~= 0 then
 	--	player.x = lastposx
 	--	player.y = lastposy
 	--elseif player.x ~= lastposx or player.y ~= lastposy then --play sound
@@ -59,7 +59,7 @@ end
 
 function love.breakblock(x,y)	
 	if x > 0 and x <= map.blocksize and y > 0 and y <= map.blocksize then
-		map.loadedblock[tostring(y)][tostring(x)] = 0
+		map.loadedblock[y][x] = 0
 	end
 end
 
@@ -81,7 +81,7 @@ function love.mouseupdate(dt)
 		local newx = player.x+mousetilex
 		local newy = player.y+mousetiley
 		if newx > 0 and newx <= map.blocksize and newy > 0 and newy <= map.blocksize then
-			if map.loadedblock[tostring(newy)][tostring(newx)] == 0 then
+			if map.loadedblock[newy][newx] == 0 then
 				player.moveaim = {newx,newy}
 				player.mcooldown = 0.5
 				--love.breakblock(player.moveaim[1],player.moveaim[2])
@@ -95,7 +95,14 @@ function love.mouseupdate(dt)
 		end
 	end
 	if oldmove[1] ~= player.moveaim[1] or oldmove[2] ~= player.moveaim[2] then
-		love.audio.stop(moveconfirm)
-		love.audio.play(moveconfirm)
+		local test = findpath({player.x,player.y},player.moveaim)
+		--play sounds for path success and fail
+		if test == true then
+			love.audio.stop(moveconfirm)
+			love.audio.play(moveconfirm)
+		else
+			love.audio.stop(moveno)
+			love.audio.play(moveno)
+		end
 	end
 end

@@ -1,3 +1,4 @@
+dofile("helpers.lua")
 math.randomseed(os.time())
 
 local survival = {}
@@ -11,26 +12,47 @@ survival.Water  = math.random(50,100)
 resource_tick   = 0
 
 map = {}
-map.blocksize = 30 --length and width
+map.blocksize = 32 --length and width
 map.loadedblock = {}
 map.tilesize = 32
 
 --player class
 player = {}
-player.x = 5--position
-player.y = 10
+player.x = 4--position
+player.y = 5
 player.aimx = 0--aim direction
 player.aimy = 0
 player.moveaim = {0,0} --the dir player wants to move
 player.mcooldown = 0 --cool it down so the player doesn't spam pathfinding
+player.path = {}
+player.pathcooldown = 0
 
 --graphics class
 graphics = {}
 
 
-
-function time_tick(dt)
-
+--move the character around
+function player.movement(dt)
+	if player.pathcooldown > 0 then
+		player.pathcooldown = player.pathcooldown - dt
+		if player.pathcooldown < 0 then
+			player.pathcooldown = 0
+		end
+	end
+	if player.pathcooldown == 0 then
+		if table.getn(player.path) > 0 then
+			player.pathcooldown = 1
+			
+			--do this so sounds don't conflict
+			if player.x ~= player.path[1][1] or player.y ~= player.path[1][2] then
+				player.x = player.path[1][1]
+				player.y = player.path[1][2]
+				love.audio.stop(footstep)
+				love.audio.play(footstep)
+			end
+			table.remove(player.path,1)
+		end
+	end
 end
 
 function love.load()
@@ -52,8 +74,11 @@ function love.load()
 	
 	footstep = love.audio.newSource("footstep.wav", "static" )
 	moveconfirm = love.audio.newSource("move.ogg", "static" )
+	moveno = love.audio.newSource("moveno.mp3", "static" )
+	bgmusic = love.audio.newSource("backgroundmusic.mp3", "stream" )
 
 	love.generateblock(dt,1,1)
+	
 end
 
 function love.draw(dt)
@@ -68,7 +93,9 @@ function love.draw(dt)
 	love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL", 0,lheight-120)
 	love.graphics.print("Move Aim:"..player.moveaim[1]..","..player.moveaim[2],0,0)
 	love.graphics.print("Mouse Tile:"..mousetilex..","..mousetiley,0,20)
-	love.graphics.print("Movement Cooldown:"..player.mcooldown,0,40)
+	love.graphics.print("Movement Selection Cooldown:"..player.mcooldown,0,40)
+	love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
+	love.drawdebugpath()
 	
 end
 
@@ -79,6 +106,22 @@ function love.update(dt)
 	graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
 	graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
 	love.mouseupdate(dt)
+	player.movement(dt)
+end
+
+--this is a debug to show path
+function love.drawdebugpath()
+	if table.getn(player.path) > 0 then
+		for _,block in pairs(player.path) do
+			--block[1] block[2]
+			--print(dump(player.path[i]))
+			local posx = ((block[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw
+			local posy = ((block[2]-player.y+1)*map.tilesize)-map.tilesize + graphics.sch
+			love.graphics.setColor( 255, 0, 0 )
+			love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+			love.graphics.setColor(255,255,255)
+		end	
+	end
 end
 
 --this draws the mapblock
@@ -87,32 +130,32 @@ function love.rendermap(x,y)
 		for xer = 1,map.blocksize do
 			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw
 			local posy = ((yer-y+1)*map.tilesize)-map.tilesize + graphics.sch
-			if map.loadedblock[tostring(yer)][tostring(xer)] == 0 then
+			if map.loadedblock[yer][xer] == 0 then
 				love.graphics.draw(graphics.cobble, posx,posy) 
-			elseif map.loadedblock[tostring(yer)][tostring(xer)] == 1 then
+			elseif map.loadedblock[yer][xer] == 1 then
 				love.graphics.draw(graphics.brick, posx,posy) 
 			end
 		
 		end
-	end
-	
+	end	
 end
 
 --generates map block in memory
 function love.generateblock(dt,x,y)
 	map.loadedblock = {}
-	for yer = 1,map.blocksize do
-		map.loadedblock[tostring(yer)] = {}
-		for xer = 1,map.blocksize do
-			--map.loadedblock[yer][xer] =
-			local value = love.math.noise(xer,yer )
+	for y = 1,map.blocksize do
+		table.insert(map.loadedblock, {})
+		for x = 1,map.blocksize do
+			local value = love.math.noise(x,y )
+			
 			if value > 0.4 then
-			map.loadedblock[tostring(yer)][tostring(xer)] = 1
+				table.insert(map.loadedblock[y],0)
 			else
-				map.loadedblock[tostring(yer)][tostring(xer)] = 0
+				table.insert(map.loadedblock[y],1)
 			end
 		end
 	end
+	--print(dump(map.loadedblock))
 end
 
 --this draws the "crosshairs"
@@ -123,6 +166,7 @@ function love.drawcrosshairs()
 	--end
 	--love.graphics.setColor( 255, 255, 255 )
 	love.graphics.rectangle( "line", graphics.scw+(mousetilex*map.tilesize),graphics.sch+(mousetiley*map.tilesize), map.tilesize, map.tilesize)
+	--[[
 	if player.moveaim[1] ~= 0 and player.moveaim[2] ~= 0 then
 		local posx = ((player.moveaim[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw
 		local posy = ((player.moveaim[2]-player.y+1)*map.tilesize)-map.tilesize + graphics.sch
@@ -130,7 +174,9 @@ function love.drawcrosshairs()
 		love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
 		love.graphics.setColor(255,255,255)
 	end
+	]]--
 end
 
 dofile("controls.lua")
+dofile("pathfind.lua")
 
