@@ -81,6 +81,7 @@ function love.load()
 	moveconfirm = love.audio.newSource("move.ogg", "static" )
 	moveno = love.audio.newSource("moveno.mp3", "static" )
 	bgmusic = love.audio.newSource("backgroundmusic.mp3", "stream" )
+	watchdog = love.audio.newSource("WATCHDOG.wav", "stream" )
 
 	love.generateblock(dt,1,1)
 	

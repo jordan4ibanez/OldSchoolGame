@@ -1,7 +1,9 @@
 --handle keyboard input
 function love.keypressed(key, unicode)
 	if key == "space" then
-		--bring up menu with this
+		--bring up WATCHDOG with this
+		love.audio.stop(watchdog)
+		love.audio.play(watchdog)
 	end
 	
 	--toggle running
