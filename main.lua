@@ -1,6 +1,3 @@
-
-
-
 math.randomseed(os.time())
 
 local survival = {}
@@ -37,13 +34,20 @@ end
 function love.load()
 	--keep the multiplier odd to render out all possible tiles
 	love.window.setMode( 0, 0, {resizable=true,fullscreen=false} )
+	love.window.setTitle("Old School Game")
 	
 	love.graphics.setNewFont(20)
 
     graphics.cobble = love.graphics.newImage("cobble_blood_1_new.png")
     graphics.brick = love.graphics.newImage("brick_brown_0.png")
     graphics.player = love.graphics.newImage("player.png")
+    --graphics.crosshair = love.graphics.newImage("crosshair.png")
 
+	cursor = love.mouse.newCursor( "crosshair.png", 15, 15 )
+
+
+	love.mouse.setCursor( cursor )
+	
 	footstep = love.audio.newSource("footstep.wav", "static" )
 
 	love.generateblock(dt,1,1)
@@ -59,6 +63,7 @@ function love.draw(dt)
 	--debug info
 	local lwidth,lheight = love.window.getMode()
 	love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL", 0,lheight-120)
+	
 end
 
 function love.update(dt)
@@ -67,6 +72,19 @@ function love.update(dt)
 	graphics.screenw = love.graphics.getWidth()
 	graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
 	graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
+	love.mouseupdate(dt)
+end
+
+function love.mouseupdate(dt)
+	mousex, mousey = love.mouse.getPosition( )
+	
+	if mousex and mousey then
+		mousetilex = math.floor((mousex-graphics.scw)/map.tilesize)
+		mousetiley = math.floor((mousey-graphics.sch)/map.tilesize)
+	else
+		mousetilex, mousetiley = 0,0
+	end
+
 end
 
 --this draws the mapblock
@@ -105,115 +123,14 @@ end
 
 --this draws the "crosshairs"
 function love.drawcrosshairs()
-	love.graphics.setColor( 255, 0, 0 )
-	if player.aimx ~= 0 or player.aimy ~= 0 then
-		love.graphics.rectangle( "line", graphics.scw+(map.tilesize*player.aimx), graphics.sch+(map.tilesize*player.aimy), map.tilesize, map.tilesize)
-	end
-	love.graphics.setColor( 255, 255, 255 )
+	--love.graphics.setColor( 255, 0, 0 )
+	--if player.aimx ~= 0 or player.aimy ~= 0 then
+	--	love.graphics.rectangle( "line", graphics.scw+(map.tilesize*player.aimx), graphics.sch+(map.tilesize*player.aimy), map.tilesize, map.tilesize)
+	--end
+	--love.graphics.setColor( 255, 255, 255 )
+	print(mousetilex, mousetiley)
+	love.graphics.rectangle( "line", graphics.scw+(mousetilex*map.tilesize),graphics.sch+(mousetiley*map.tilesize), map.tilesize, map.tilesize)
 end
 
+dofile("controls.lua")
 
---handle keyboard input
-function love.keypressed(key, unicode)
-	--use this to call if colliding
-	local lastposx = player.x
-	local lastposy = player.y
-    if key == "up" then
-		if player.y > 1 then
-			player.y = player.y - 1
-		end
-	end
-	if key == "down" then
-		if player.y < map.blocksize then
-			player.y = player.y + 1
-		end
-	end
-    
-    if key == "left" then
-		if player.x > 1 then
-			player.x = player.x - 1
-		end
-	end
-	if key == "right" then
-		if player.x < map.blocksize then
-			player.x = player.x + 1
-		end
-	end
-	
-	--simple collision correction
-	if map.loadedblock[tostring(player.y)][tostring(player.x)] ~= 0 then
-		player.x = lastposx
-		player.y = lastposy
-	elseif player.x ~= lastposx or player.y ~= lastposy then --play sound
-		love.audio.stop(footstep)
-		love.audio.play(footstep)
-	end
-
-
-	--aiming
-	if key == "w" or key == "s" then
-		player.aimx = 0
-	end
-	if key == "a" or key == "d" then
-		player.aimy = 0
-	end
-	if key == "w" then
-		--return if aimed, else aim
-		if player.aimy < 0 then
-			player.aimy = 0
-		else
-			player.aimy = -1
-		end
-	end
-	if key == "s" then
-		if player.aimy > 0 then
-			player.aimy = 0
-		else
-			player.aimy = 1
-		end
-	end
-	if key == "a" then
-		if player.aimx < 0 then
-			player.aimx = 0
-		else
-			player.aimx = -1
-		end
-	end
-	if key == "d" then
-		if player.aimx > 0 then
-			player.aimx = 0
-		else
-			player.aimx = 1
-		end
-	end
-
-	if key == "space" then
-		love.breakblock()
-	end
-	
-	--end game
-	if key == 'escape' then
-		love.event.quit()
-	end
-	if key == "lctrl" then
-		print("Game has been reset")
-		love.event.quit("restart")
-	end
-   --resize window
-	if key == "`" then
-		local width, height, flags = love.window.getMode( )
-		love.window.setMode( width, height, {fullscreen=not flags.fullscreen,resizable=true})
-	end 
-end
-
-
-function love.breakblock()
-	if player.aimx ~= 0 or player.aimy ~= 0 then
-		local y = player.y+player.aimy
-		local x = player.x+player.aimx
-		
-		if x > 0 and x <= map.blocksize and y > 0 and y <= map.blocksize then
-			map.loadedblock[tostring(y)][tostring(x)] = 0
-		end
-	end
-end
