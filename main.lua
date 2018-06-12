@@ -26,6 +26,7 @@ player.moveaim = {0,0} --the dir player wants to move
 player.mcooldown = 0 --cool it down so the player doesn't spam pathfinding
 player.path = {}
 player.pathcooldown = 0
+player.running = false
 
 --graphics class
 graphics = {}
@@ -41,7 +42,11 @@ function player.movement(dt)
 	end
 	if player.pathcooldown == 0 then
 		if table.getn(player.path) > 0 then
-			player.pathcooldown = 1
+			if player.running == true then
+				player.pathcooldown = 0.35
+			else
+				player.pathcooldown = 0.7
+			end
 			
 			--do this so sounds don't conflict
 			if player.x ~= player.path[1][1] or player.y ~= player.path[1][2] then
@@ -90,11 +95,12 @@ function love.draw(dt)
 	
 	--debug info
 	local lwidth,lheight = love.window.getMode()
-	love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL", 0,lheight-120)
+	love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL\nToggle Run:R", 0,lheight-140)
 	love.graphics.print("Move Aim:"..player.moveaim[1]..","..player.moveaim[2],0,0)
 	love.graphics.print("Mouse Tile:"..mousetilex..","..mousetiley,0,20)
 	love.graphics.print("Movement Selection Cooldown:"..player.mcooldown,0,40)
 	love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
+	love.graphics.print("Running:"..tostring(player.running),0,80)
 	love.drawdebugpath()
 	
 end

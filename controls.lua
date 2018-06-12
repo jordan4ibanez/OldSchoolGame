@@ -1,44 +1,12 @@
 --handle keyboard input
 function love.keypressed(key, unicode)
-	--use this to call if colliding
-	local lastposx = player.x
-	local lastposy = player.y
-	
-    if key == "w" then
-		if player.y > 1 then
-			player.y = player.y - 1
-		end
-	end
-	if key == "s" then
-		if player.y < map.blocksize then
-			player.y = player.y + 1
-		end
-	end
-    
-    if key == "a" then
-		if player.x > 1 then
-			player.x = player.x - 1
-		end
-	end
-	if key == "d" then
-		if player.x < map.blocksize then
-			player.x = player.x + 1
-		end
-	end
-	
-	--simple collision correction
-	--if map.loadedblock[player.y][player.x] ~= 0 then
-	--	player.x = lastposx
-	--	player.y = lastposy
-	--elseif player.x ~= lastposx or player.y ~= lastposy then --play sound
-	--	love.audio.stop(footstep)
-	--	love.audio.play(footstep)
-	--end
-	
-
-
 	if key == "space" then
-		
+		--bring up menu with this
+	end
+	
+	--toggle running
+	if key == "r" then
+		player.running = not player.running
 	end
 	
 	--end game
