@@ -3,77 +3,42 @@ function love.keypressed(key, unicode)
 	--use this to call if colliding
 	local lastposx = player.x
 	local lastposy = player.y
-    if key == "up" then
+	
+    if key == "w" then
 		if player.y > 1 then
 			player.y = player.y - 1
 		end
 	end
-	if key == "down" then
+	if key == "s" then
 		if player.y < map.blocksize then
 			player.y = player.y + 1
 		end
 	end
     
-    if key == "left" then
+    if key == "a" then
 		if player.x > 1 then
 			player.x = player.x - 1
 		end
 	end
-	if key == "right" then
+	if key == "d" then
 		if player.x < map.blocksize then
 			player.x = player.x + 1
 		end
 	end
 	
 	--simple collision correction
-	if map.loadedblock[tostring(player.y)][tostring(player.x)] ~= 0 then
-		player.x = lastposx
-		player.y = lastposy
-	elseif player.x ~= lastposx or player.y ~= lastposy then --play sound
-		love.audio.stop(footstep)
-		love.audio.play(footstep)
-	end
+	--if map.loadedblock[tostring(player.y)][tostring(player.x)] ~= 0 then
+	--	player.x = lastposx
+	--	player.y = lastposy
+	--elseif player.x ~= lastposx or player.y ~= lastposy then --play sound
+	--	love.audio.stop(footstep)
+	--	love.audio.play(footstep)
+	--end
+	
 
-
-	--aiming
-	if key == "w" or key == "s" then
-		player.aimx = 0
-	end
-	if key == "a" or key == "d" then
-		player.aimy = 0
-	end
-	if key == "w" then
-		--return if aimed, else aim
-		if player.aimy < 0 then
-			player.aimy = 0
-		else
-			player.aimy = -1
-		end
-	end
-	if key == "s" then
-		if player.aimy > 0 then
-			player.aimy = 0
-		else
-			player.aimy = 1
-		end
-	end
-	if key == "a" then
-		if player.aimx < 0 then
-			player.aimx = 0
-		else
-			player.aimx = -1
-		end
-	end
-	if key == "d" then
-		if player.aimx > 0 then
-			player.aimx = 0
-		else
-			player.aimx = 1
-		end
-	end
 
 	if key == "space" then
-		love.breakblock()
+		
 	end
 	
 	--end game
@@ -92,13 +57,45 @@ function love.keypressed(key, unicode)
 end
 
 
-function love.breakblock()
-	if player.aimx ~= 0 or player.aimy ~= 0 then
-		local y = player.y+player.aimy
-		local x = player.x+player.aimx
-		
-		if x > 0 and x <= map.blocksize and y > 0 and y <= map.blocksize then
-			map.loadedblock[tostring(y)][tostring(x)] = 0
+function love.breakblock(x,y)	
+	if x > 0 and x <= map.blocksize and y > 0 and y <= map.blocksize then
+		map.loadedblock[tostring(y)][tostring(x)] = 0
+	end
+end
+
+function love.mouseupdate(dt)
+	mousex, mousey = love.mouse.getPosition( )
+	local down1 = love.mouse.isDown(1)
+	
+	--get which tile the player is on
+	if mousex and mousey then
+		mousetilex = math.floor((mousex-graphics.scw)/map.tilesize)
+		mousetiley = math.floor((mousey-graphics.sch)/map.tilesize)
+	else
+		mousetilex, mousetiley = 0,0
+	end
+	
+	--the movement aim tile
+	local oldmove = player.moveaim
+	if down1 and player.mcooldown == 0 then
+		local newx = player.x+mousetilex
+		local newy = player.y+mousetiley
+		if newx > 0 and newx <= map.blocksize and newy > 0 and newy <= map.blocksize then
+			if map.loadedblock[tostring(newy)][tostring(newx)] == 0 then
+				player.moveaim = {newx,newy}
+				player.mcooldown = 0.5
+				--love.breakblock(player.moveaim[1],player.moveaim[2])
+			end
 		end
+	end
+	if player.mcooldown > 0 then
+		player.mcooldown = player.mcooldown - dt
+		if player.mcooldown < 0 then
+			player.mcooldown = 0
+		end
+	end
+	if oldmove[1] ~= player.moveaim[1] or oldmove[2] ~= player.moveaim[2] then
+		love.audio.stop(moveconfirm)
+		love.audio.play(moveconfirm)
 	end
 end
