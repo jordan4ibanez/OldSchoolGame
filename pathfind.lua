@@ -33,10 +33,12 @@ function findpath(start,ending)
 		--print(('Path found! Length: %.2f'):format(path:getLength()))
 		--clear path data
 		player.path = {}
-		if player.running == true then
-			player.pathcooldown = player.runspeed
-		else
-			player.pathcooldown = player.walkspeed
+		if player.pathcooldown == 0 then
+			if player.running == true then
+				player.pathcooldown = player.runspeed
+			else
+				player.pathcooldown = player.walkspeed
+			end
 		end
 		for node, count in path:nodes() do
 		  --print(('Step: %d - x: %d - y: %d'):format(count, node:getX(), node:getY()))
