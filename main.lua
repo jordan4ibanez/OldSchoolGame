@@ -27,38 +27,11 @@ player.mcooldown = 0 --cool it down so the player doesn't spam pathfinding
 player.path = {}
 player.pathcooldown = 0
 player.running = false
+player.runspeed = 0.25
+player.walkspeed = 0.5
 
 --graphics class
 graphics = {}
-
-
---move the character around
-function player.movement(dt)
-	if player.pathcooldown > 0 then
-		player.pathcooldown = player.pathcooldown - dt
-		if player.pathcooldown < 0 then
-			player.pathcooldown = 0
-		end
-	end
-	if player.pathcooldown == 0 then
-		if table.getn(player.path) > 0 then
-			if player.running == true then
-				player.pathcooldown = 0.35
-			else
-				player.pathcooldown = 0.7
-			end
-			
-			--do this so sounds don't conflict
-			if player.x ~= player.path[1][1] or player.y ~= player.path[1][2] then
-				player.x = player.path[1][1]
-				player.y = player.path[1][2]
-				love.audio.stop(footstep)
-				love.audio.play(footstep)
-			end
-			table.remove(player.path,1)
-		end
-	end
-end
 
 function love.load()
 	--keep the multiplier odd to render out all possible tiles

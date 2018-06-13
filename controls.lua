@@ -76,3 +76,36 @@ function love.mouseupdate(dt)
 		end
 	end
 end
+
+
+--move the character around
+function player.movement(dt)
+	if player.pathcooldown > 0 then
+		player.pathcooldown = player.pathcooldown - dt
+		if player.pathcooldown < 0 then
+			player.pathcooldown = 0
+		end
+	end
+	if player.pathcooldown == 0 then
+		if table.getn(player.path) > 0 then
+			
+			--make it so player's walk cycle doesn't get broken
+			if player.pathcooldown == 0 then
+				if player.running == true then
+					player.pathcooldown = player.runspeed
+				else
+					player.pathcooldown = player.walkspeed
+				end
+			end
+			
+			--do this so sounds don't conflict
+			if player.x ~= player.path[1][1] or player.y ~= player.path[1][2] then
+				player.x = player.path[1][1]
+				player.y = player.path[1][2]
+				love.audio.stop(footstep)
+				love.audio.play(footstep)
+			end
+			table.remove(player.path,1)
+		end
+	end
+end

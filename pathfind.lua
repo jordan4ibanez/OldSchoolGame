@@ -10,9 +10,6 @@ local Pathfinder = require ("jumper.pathfinder")
 
 
 function findpath(start,ending)
-	--clear path data
-	player.path = {}
-	player.pathcooldown = 0
 	
 	-- Value for walkable tiles
 	local walkable = 0
@@ -28,15 +25,26 @@ function findpath(start,ending)
 	local endx, endy = ending[1],ending[2]
 
 	-- Calculates the path, and its length
+	local nClock = os.clock()
 	local path = myFinder:getPath(startx, starty, endx, endy)
 
 	-- Pretty-printing the results
 	if path then
-	  print(('Path found! Length: %.2f'):format(path:getLength()))
+		--print(('Path found! Length: %.2f'):format(path:getLength()))
+		--clear path data
+		player.path = {}
+		if player.running == true then
+			player.pathcooldown = player.runspeed
+		else
+			player.pathcooldown = player.walkspeed
+		end
 		for node, count in path:nodes() do
-		  print(('Step: %d - x: %d - y: %d'):format(count, node:getX(), node:getY()))
+		  --print(('Step: %d - x: %d - y: %d'):format(count, node:getX(), node:getY()))
 		  table.insert(player.path, {node:getX(), node:getY()})
 		end
+		--remove the first step because it's the player's position
+		table.remove(player.path,1)
+		print(("Elapsed time is: " .. os.clock()-nClock))
 		return(true)
 	else
 		print("no path found")
