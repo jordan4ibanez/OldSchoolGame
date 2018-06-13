@@ -109,3 +109,13 @@ function player.movement(dt)
 		end
 	end
 end
+
+--change zoom
+function love.wheelmoved(x,y)
+	map.tilesize = map.tilesize + y
+	if map.tilesize < 16 then
+		map.tilesize = 16
+	elseif map.tilesize > 64 then
+		map.tilesize = 64
+	end
+end

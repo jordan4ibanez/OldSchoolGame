@@ -1,5 +1,3 @@
-
-
 -- Library setup
 -- Calls the grid class
 local Grid = require ("jumper.grid")

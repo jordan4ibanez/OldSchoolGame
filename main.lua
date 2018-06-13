@@ -1,4 +1,9 @@
+--handle blocks seemlessly somehow?? dump all map on screen into table?
+
 dofile("helpers.lua")
+
+love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
+
 math.randomseed(os.time())
 
 local survival = {}
@@ -12,14 +17,14 @@ survival.Water  = math.random(50,100)
 resource_tick   = 0
 
 map = {}
-map.blocksize = 400 --length and width (don't set above 350 for pathfinding speed)
+map.blocksize = 32 --length and width (don't set above 350 for pathfinding speed)
 map.loadedblock = {}
-map.tilesize = 32
+map.tilesize = 16
 
 --player class
 player = {}
-player.x = 150--position
-player.y = 150
+player.x = 5--position
+player.y = 5
 player.aimx = 0--aim direction
 player.aimy = 0
 player.moveaim = {0,0} --the dir player wants to move
@@ -40,8 +45,8 @@ function love.load()
 	
 	love.graphics.setNewFont(20)
 
-    graphics.cobble = love.graphics.newImage("cobble_blood_1_new.png")
-    graphics.brick = love.graphics.newImage("brick_brown_0.png")
+    graphics.cobble = love.graphics.newImage("tiles/cobble.png")
+    graphics.brick = love.graphics.newImage("tiles/brick.png")
     graphics.player = love.graphics.newImage("player.png")
     --graphics.crosshair = love.graphics.newImage("crosshair.png")
 
@@ -62,7 +67,7 @@ end
 
 function love.draw(dt)
 	love.rendermap(player.x,player.y)
-	love.graphics.draw(graphics.player,graphics.scw,graphics.sch)
+	love.graphics.draw(graphics.player,graphics.scw,graphics.sch,0,map.tilesize/32,map.tilesize/32)
 	--this is a debug to show the center of the screen
 	--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
 	love.drawcrosshairs()
@@ -77,7 +82,6 @@ function love.draw(dt)
 	love.graphics.print("Running:"..tostring(player.running),0,80)
 	love.graphics.print("FPS:"..love.timer.getFPS( ),0,100)
 	love.drawdebugpath()
-	
 end
 
 function love.update(dt)
@@ -139,9 +143,9 @@ function love.rendermap(x,y)
 			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw
 			local posy = ((yer-y+1)*map.tilesize)-map.tilesize + graphics.sch
 			if map.loadedblock[yer][xer] == 0 then
-				love.graphics.draw(graphics.cobble, posx,posy) 
+				love.graphics.draw(graphics.cobble, posx,posy,0,map.tilesize/32,map.tilesize/32) 
 			elseif map.loadedblock[yer][xer] == 1 then
-				love.graphics.draw(graphics.brick, posx,posy) 
+				love.graphics.draw(graphics.brick, posx,posy,0,map.tilesize/32,map.tilesize/32) 
 			end
 		
 		end
@@ -149,7 +153,7 @@ function love.rendermap(x,y)
 end
 
 --generates map block in memory
-function love.generateblock(dt,x,y)
+function love.generateblock(dt)
 	map.loadedblock = {}
 	for y = 1,map.blocksize do
 		table.insert(map.loadedblock, {})
