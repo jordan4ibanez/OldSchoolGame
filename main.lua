@@ -12,14 +12,14 @@ survival.Water  = math.random(50,100)
 resource_tick   = 0
 
 map = {}
-map.blocksize = 32 --length and width
+map.blocksize = 400 --length and width (don't set above 350 for pathfinding speed)
 map.loadedblock = {}
 map.tilesize = 32
 
 --player class
 player = {}
-player.x = 4--position
-player.y = 5
+player.x = 150--position
+player.y = 150
 player.aimx = 0--aim direction
 player.aimy = 0
 player.moveaim = {0,0} --the dir player wants to move
@@ -75,6 +75,7 @@ function love.draw(dt)
 	love.graphics.print("Movement Selection Cooldown:"..player.mcooldown,0,40)
 	love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
 	love.graphics.print("Running:"..tostring(player.running),0,80)
+	love.graphics.print("FPS:"..love.timer.getFPS( ),0,100)
 	love.drawdebugpath()
 	
 end
@@ -104,10 +105,37 @@ function love.drawdebugpath()
 	end
 end
 
---this draws the mapblock
+--this draws the map within the limits of the screen
 function love.rendermap(x,y)
-	for yer = 1,map.blocksize do
-		for xer = 1,map.blocksize do
+	--find the limits of what to render
+	local xlimit = math.floor(graphics.scw/map.tilesize)
+	local ylimit = math.floor(graphics.sch/map.tilesize + 0.5) --fix weird issue (+ 0.5)
+	--check and correct x
+	local xlow = player.x-xlimit
+	local xhigh = player.x+xlimit
+	--xhigh = xhigh - 1 --remove this!!!!!!!!
+	--xlow = xlow + 1 --remove this!!!!!!!
+	if xlow < 1 then
+		xlow = 1
+	end
+	if xhigh > map.blocksize then
+		xhigh = map.blocksize
+	end
+	
+	local ylow = player.y-ylimit
+	local yhigh = player.y+ylimit
+	--yhigh = yhigh - 1 --remove this !!!!!!!!!!!
+	--ylow = ylow + 1 --remove this!!!!!
+	if ylow < 1 then
+		ylow = 1
+	end
+	if yhigh > map.blocksize then
+		yhigh = map.blocksize
+	end
+	
+	
+	for yer = ylow,yhigh do
+		for xer = xlow,xhigh do
 			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw
 			local posy = ((yer-y+1)*map.tilesize)-map.tilesize + graphics.sch
 			if map.loadedblock[yer][xer] == 0 then

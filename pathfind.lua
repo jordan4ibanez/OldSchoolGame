@@ -18,7 +18,7 @@ function findpath(start,ending)
 	local grid = Grid(map.loadedblock)
 
 	-- Creates a pathfinder object using Jump Point Search algorithm
-	local myFinder = Pathfinder(grid, 'DIJKSTRA', walkable)
+	local myFinder = Pathfinder(grid, 'ASTAR', 0)
 
 	-- Define start and goal locations coordinates
 	local startx, starty = start[1],start[2]
@@ -46,10 +46,10 @@ function findpath(start,ending)
 		end
 		--remove the first step because it's the player's position
 		table.remove(player.path,1)
-		print(("Elapsed time is: " .. os.clock()-nClock))
+		--print(("Elapsed time is: " .. os.clock()-nClock))
 		return(true)
 	else
-		print("no path found")
+		--print("no path found")
 		return(false)
 	end
 end
