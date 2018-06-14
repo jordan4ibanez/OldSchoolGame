@@ -17,7 +17,7 @@ survival.Water  = math.random(50,100)
 resource_tick   = 0
 
 map = {}
-map.blocksize = 32 --length and width (don't set above 350 for pathfinding speed)
+map.blocksize = 350 --length and width (don't set above 350 for pathfinding speed)
 map.loadedblock = {}
 map.tilesize = 16
 
@@ -81,6 +81,7 @@ function love.draw(dt)
 	love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
 	love.graphics.print("Running:"..tostring(player.running),0,80)
 	love.graphics.print("FPS:"..love.timer.getFPS( ),0,100)
+	love.graphics.print("ZOOM:"..map.tilesize,0,120)
 	love.drawdebugpath()
 end
 

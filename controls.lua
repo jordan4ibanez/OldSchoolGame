@@ -113,8 +113,8 @@ end
 --change zoom
 function love.wheelmoved(x,y)
 	map.tilesize = map.tilesize + y
-	if map.tilesize < 16 then
-		map.tilesize = 16
+	if map.tilesize < 32 then
+		map.tilesize = 32
 	elseif map.tilesize > 64 then
 		map.tilesize = 64
 	end
