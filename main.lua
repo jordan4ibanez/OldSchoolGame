@@ -17,9 +17,9 @@ survival.Water  = math.random(50,100)
 resource_tick   = 0
 
 map = {}
-map.blocksize = 350 --length and width (don't set above 350 for pathfinding speed)
+map.blocksize = 500 --length and width (don't set above 350 for pathfinding speed)
 map.loadedblock = {}
-map.tilesize = 16
+map.tilesize = 32
 
 --player class
 player = {}
@@ -76,7 +76,7 @@ function love.draw(dt)
 	local lwidth,lheight = love.window.getMode()
 	love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL\nToggle Run:R", 0,lheight-140)
 	love.graphics.print("Move Aim:"..player.moveaim[1]..","..player.moveaim[2],0,0)
-	love.graphics.print("Mouse Tile:"..mousetilex..","..mousetiley,0,20)
+	love.graphics.print("Mouse Tile:"..(player.x+mousetilex)..","..(player.y+mousetiley),0,20)
 	love.graphics.print("Movement Selection Cooldown:"..player.mcooldown,0,40)
 	love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
 	love.graphics.print("Running:"..tostring(player.running),0,80)

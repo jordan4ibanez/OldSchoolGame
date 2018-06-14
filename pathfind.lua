@@ -11,9 +11,49 @@ function findpath(start,ending)
 	
 	-- Value for walkable tiles
 	local walkable = 0
+	
+	--artificially limit the distance to preserve performance
+	local tempmap = {}
+	local limiter = 50
+	
+	--add in exception to not crash when out of range (could be used with anti-perk?)
+	if math.abs(start[1]-ending[1]) > limiter or math.abs(start[2]-ending[2]) > limiter then
+		return(false)
+	end
+	
+	--check and correct x
+	local xlow = player.x-limiter
+	local xhigh = player.x+limiter
+	--xhigh = xhigh - 1 --remove this!!!!!!!!
+	--xlow = xlow + 1 --remove this!!!!!!!
+	if xlow < 1 then
+		xlow = 1
+	end
+	if xhigh > map.blocksize then
+		xhigh = map.blocksize
+	end
+	
+	local ylow = player.y-limiter
+	local yhigh = player.y+limiter
+	--yhigh = yhigh - 1 --remove this !!!!!!!!!!!
+	--ylow = ylow + 1 --remove this!!!!!
+	if ylow < 1 then
+		ylow = 1
+	end
+	if yhigh > map.blocksize then
+		yhigh = map.blocksize
+	end
+	
+	for y = ylow,yhigh do
+		table.insert(tempmap, {})
+		for x = xlow,xhigh do
+			table.insert(tempmap[y],map.loadedblock[y][x])
+		end
+	end
+	
 
 	-- Creates a grid object
-	local grid = Grid(map.loadedblock)
+	local grid = Grid(tempmap)
 
 	-- Creates a pathfinder object using Jump Point Search algorithm
 	local myFinder = Pathfinder(grid, 'ASTAR', 0)
