@@ -6,7 +6,7 @@ local Pathfinder = require ("jumper.pathfinder")
 
 
 
-
+--this finds a path on the loaded map
 function findpath(start,ending,limiter)
 	--add in exception to not crash when out of range (could be used with anti-perk?)
 	if math.abs(start[1]-ending[1]) > limiter or math.abs(start[2]-ending[2]) > limiter then
@@ -43,10 +43,6 @@ function findpath(start,ending,limiter)
 	
 	--find goal on virtual grid
 	local goal = {(ending[1]-start[1])+center,(ending[2]-start[2])+center}
-	
-	
-	--then simply subtract the after path by the limiter
-
 
 	-- Creates a grid object
 	--local grid = Grid(map.loadedblock)

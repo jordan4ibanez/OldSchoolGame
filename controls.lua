@@ -65,7 +65,7 @@ function love.mouseupdate(dt)
 		end
 	end
 	if oldmove[1] ~= player.moveaim[1] or oldmove[2] ~= player.moveaim[2] then
-		local test = findpath({player.x,player.y},player.moveaim,35)
+		local test = findpath({player.x,player.y},player.moveaim,45)
 		--play sounds for path success and fail
 		if test == true then
 			love.audio.stop(moveconfirm)
