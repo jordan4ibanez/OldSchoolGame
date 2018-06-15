@@ -23,8 +23,8 @@ map.tilesize = 32
 
 --player class
 player = {}
-player.x = 5--position
-player.y = 5
+player.x = 250--position
+player.y = 250
 player.aimx = 0--aim direction
 player.aimy = 0
 player.moveaim = {0,0} --the dir player wants to move

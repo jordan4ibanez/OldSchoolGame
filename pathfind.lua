@@ -7,64 +7,65 @@ local Pathfinder = require ("jumper.pathfinder")
 
 
 
-function findpath(start,ending)
-	
+function findpath(start,ending,limiter)
+	--add in exception to not crash when out of range (could be used with anti-perk?)
+	if math.abs(start[1]-ending[1]) > limiter or math.abs(start[2]-ending[2]) > limiter then
+		print("out of range")
+		return(false)
+	end
 	-- Value for walkable tiles
 	local walkable = 0
 	
 	--artificially limit the distance to preserve performance
 	local tempmap = {}
-	local limiter = 50
 	
-	--add in exception to not crash when out of range (could be used with anti-perk?)
-	if math.abs(start[1]-ending[1]) > limiter or math.abs(start[2]-ending[2]) > limiter then
-		return(false)
-	end
-	
-	--check and correct x
-	local xlow = player.x-limiter
-	local xhigh = player.x+limiter
-	--xhigh = xhigh - 1 --remove this!!!!!!!!
-	--xlow = xlow + 1 --remove this!!!!!!!
-	if xlow < 1 then
-		xlow = 1
-	end
-	if xhigh > map.blocksize then
-		xhigh = map.blocksize
-	end
-	
-	local ylow = player.y-limiter
-	local yhigh = player.y+limiter
-	--yhigh = yhigh - 1 --remove this !!!!!!!!!!!
-	--ylow = ylow + 1 --remove this!!!!!
-	if ylow < 1 then
-		ylow = 1
-	end
-	if yhigh > map.blocksize then
-		yhigh = map.blocksize
-	end
-	
-	for y = ylow,yhigh do
+	local fakey = 1
+	local center = 0
+	for y = start[2]-limiter,limiter+start[2] do
 		table.insert(tempmap, {})
-		for x = xlow,xhigh do
-			table.insert(tempmap[y],map.loadedblock[y][x])
+		local fakex = 1
+		--can use this for x and y because box
+		--this is center of pathfinding
+		if center == 0 and fakey > limiter then
+			center = fakey
 		end
+		for x = start[1]-limiter,limiter+start[1] do
+			if not map.loadedblock[y] or not map.loadedblock[y][x] then
+				--print("fail "..x.." "..y)
+				table.insert(tempmap[fakey], -1)
+			else
+				table.insert(tempmap[fakey], map.loadedblock[y][x])
+			end
+			fakex = fakex + 1
+		end
+		fakey = fakey + 1
 	end
 	
+	--find goal on virtual grid
+	local goal = {(ending[1]-start[1])+center,(ending[2]-start[2])+center}
+	
+	
+	--then simply subtract the after path by the limiter
+
 
 	-- Creates a grid object
+	--local grid = Grid(map.loadedblock)
 	local grid = Grid(tempmap)
 
 	-- Creates a pathfinder object using Jump Point Search algorithm
 	local myFinder = Pathfinder(grid, 'ASTAR', 0)
 
 	-- Define start and goal locations coordinates
-	local startx, starty = start[1],start[2]
-	local endx, endy = ending[1],ending[2]
+	local startx, starty = center,center
+	local endx, endy = goal[1],goal[2]
 
 	-- Calculates the path, and its length
-	local nClock = os.clock()
+	--local nClock = os.clock()
 	local path = myFinder:getPath(startx, starty, endx, endy)
+
+	--find top left corner of bounding box
+	local realstartx = start[1]-center
+	local realstarty = start[2]-center
 
 	-- Pretty-printing the results
 	if path then
@@ -79,8 +80,10 @@ function findpath(start,ending)
 			end
 		end
 		for node, count in path:nodes() do
-		  --print(('Step: %d - x: %d - y: %d'):format(count, node:getX(), node:getY()))
-		  table.insert(player.path, {node:getX(), node:getY()})
+			--print(('Step: %d - x: %d - y: %d'):format(count, node:getX(), node:getY()))
+			print(('MODIFIED Step: %d - x: %d - y: %d'):format(count, node:getX()+realstartx, node:getY()+realstarty))
+			
+			table.insert(player.path, {node:getX()+realstartx, node:getY()+realstarty})
 		end
 		--remove the first step because it's the player's position
 		table.remove(player.path,1)
