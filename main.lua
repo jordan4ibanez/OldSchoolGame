@@ -33,10 +33,12 @@ player.moveaim = {0,0} --the dir player wants to move
 player.mcooldown = 0 --cool it down so the player doesn't spam pathfinding
 player.path = {}
 player.pathcooldown = 0
-player.running = false
+player.running  = false
+player.sneaking = false
 --speed of movement (higher is faster
-player.runspeed = 0.025
-player.walkspeed = 0.01
+player.runspeed  = 0.05
+player.walkspeed = 0.025
+player.sneakspeed = 0.01
 
 --graphics class
 graphics = {}

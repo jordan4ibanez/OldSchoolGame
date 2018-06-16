@@ -15,6 +15,8 @@ function love.keypressed(key, unicode)
 	
 	if key == "e" then
 		player.path = {}
+		player.xoffset = 0
+		player.yoffset = 0
 	end
 	
 	--end game
