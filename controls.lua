@@ -8,7 +8,13 @@ function love.keypressed(key, unicode)
 	
 	--toggle running
 	if key == "r" then
+		--if player.xoffset == 0 and player.yoffset == 0 then
 		player.running = not player.running
+		--end
+	end
+	
+	if key == "e" then
+		player.path = {}
 	end
 	
 	--end game
@@ -39,8 +45,8 @@ function love.mouseupdate(dt)
 	
 	--get which tile the player is on
 	if mousex and mousey then
-		mousetilex = math.floor((mousex-graphics.scw)/map.tilesize)
-		mousetiley = math.floor((mousey-graphics.sch)/map.tilesize)
+		mousetilex = math.floor((mousex-graphics.scw - (player.xoffset*map.tilesize))/map.tilesize)
+		mousetiley = math.floor((mousey-graphics.sch - (player.yoffset*map.tilesize))/map.tilesize)
 	else
 		mousetilex, mousetiley = 0,0
 	end
@@ -80,12 +86,59 @@ end
 
 --move the character around
 function player.movement(dt)
-	if player.pathcooldown > 0 then
-		player.pathcooldown = player.pathcooldown - dt
-		if player.pathcooldown < 0 then
-			player.pathcooldown = 0
+	local subber = 0
+	if player.running == true then
+		subber = player.runspeed
+	elseif player.running == false then
+		subber = player.walkspeed
+	end
+	local move = false
+	--"move the player around smoothly" while according to the game the player is still in the tile
+	if table.getn(player.path) > 0 then
+		if player.x ~= player.path[1][1] then
+			--move the offset of the screen
+			if player.x > player.path[1][1] then					
+				player.xoffset = player.xoffset + subber
+			elseif player.x < player.path[1][1] then
+				player.xoffset = player.xoffset - subber
+			end
+			--move the player
+			if math.abs(player.xoffset) >= 1 then
+				move = true
+			end
+		elseif player.y ~= player.path[1][2] then
+			--move the offset of the screen
+			if player.y > player.path[1][2] then					
+				player.yoffset = player.yoffset + subber
+			elseif player.y < player.path[1][2] then
+				player.yoffset = player.yoffset - subber
+			end
+			--move the player
+			if math.abs(player.yoffset) >= 1 then
+				move = true
+			end
 		end
 	end
+	--move the player to the next tile
+	if move == true then
+		player.xoffset = 0
+		player.yoffset = 0
+		player.x = player.path[1][1]
+		player.y = player.path[1][2]
+		love.audio.stop(footstep)
+		love.audio.play(footstep)
+		table.remove(player.path,1)
+	end
+	
+	
+	--if player.pathcooldown > 0 then
+	--	player.pathcooldown = player.pathcooldown - subber
+		
+		--if player.pathcooldown < 0 then
+		--	player.pathcooldown = 0
+		--end
+	--end
+	--[[
 	if player.pathcooldown == 0 then
 		if table.getn(player.path) > 0 then
 			
@@ -108,6 +161,7 @@ function player.movement(dt)
 			table.remove(player.path,1)
 		end
 	end
+	]]--
 end
 
 --change zoom

@@ -23,8 +23,10 @@ map.tilesize = 32
 
 --player class
 player = {}
-player.x = 256--position
+player.x = 255--position
 player.y = 247
+player.xoffset = 0
+player.yoffset = 0
 player.aimx = 0--aim direction
 player.aimy = 0
 player.moveaim = {0,0} --the dir player wants to move
@@ -32,8 +34,9 @@ player.mcooldown = 0 --cool it down so the player doesn't spam pathfinding
 player.path = {}
 player.pathcooldown = 0
 player.running = false
-player.runspeed = 0.25
-player.walkspeed = 0.5
+--speed of movement (higher is faster
+player.runspeed = 0.025
+player.walkspeed = 0.01
 
 --graphics class
 graphics = {}
@@ -101,8 +104,8 @@ function love.drawdebugpath()
 		for _,block in pairs(player.path) do
 			--block[1] block[2]
 			--print(dump(player.path[i]))
-			local posx = ((block[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw
-			local posy = ((block[2]-player.y+1)*map.tilesize)-map.tilesize + graphics.sch
+			local posx = ((block[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw + (player.xoffset*map.tilesize)
+			local posy = ((block[2]-player.y+1)*map.tilesize)-map.tilesize + graphics.sch + (player.yoffset*map.tilesize)
 			love.graphics.setColor( 255, 0, 0 )
 			love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
 			love.graphics.setColor(255,255,255)
@@ -141,8 +144,8 @@ function love.rendermap(x,y)
 	
 	for yer = ylow,yhigh do
 		for xer = xlow,xhigh do
-			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw
-			local posy = ((yer-y+1)*map.tilesize)-map.tilesize + graphics.sch
+			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw + (player.xoffset*map.tilesize)
+			local posy = ((yer-y+1)*map.tilesize)-map.tilesize + graphics.sch + (player.yoffset*map.tilesize)
 			if map.loadedblock[yer][xer] == 0 then
 				love.graphics.draw(graphics.cobble, posx,posy,0,map.tilesize/32,map.tilesize/32) 
 			elseif map.loadedblock[yer][xer] == 1 then
@@ -178,7 +181,9 @@ function love.drawcrosshairs()
 	--	love.graphics.rectangle( "line", graphics.scw+(map.tilesize*player.aimx), graphics.sch+(map.tilesize*player.aimy), map.tilesize, map.tilesize)
 	--end
 	--love.graphics.setColor( 255, 255, 255 )
-	love.graphics.rectangle( "line", graphics.scw+(mousetilex*map.tilesize),graphics.sch+(mousetiley*map.tilesize), map.tilesize, map.tilesize)
+	local x = graphics.scw+(mousetilex*map.tilesize) + (player.xoffset*map.tilesize)
+	local y = graphics.sch+(mousetiley*map.tilesize) + (player.yoffset*map.tilesize)
+	love.graphics.rectangle( "line",x,y, map.tilesize, map.tilesize)
 	--[[
 	if player.moveaim[1] ~= 0 and player.moveaim[2] ~= 0 then
 		local posx = ((player.moveaim[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw
