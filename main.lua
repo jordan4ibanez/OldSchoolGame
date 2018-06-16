@@ -99,8 +99,9 @@ function love.update(dt)
 	graphics.screenw = love.graphics.getWidth()
 	graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
 	graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
-	love.mouseupdate(dt)
 	player.movement(dt)
+	love.mouseupdate(dt)
+	
 end
 
 --this is a debug to show path
@@ -128,8 +129,8 @@ end
 --this draws the map within the limits of the screen
 function love.rendermap(x,y)
 	--find the limits of what to render
-	local xlimit = math.floor(graphics.scw/map.tilesize)
-	local ylimit = math.floor(graphics.sch/map.tilesize + 0.5) --fix weird issue (+ 0.5)
+	local xlimit = math.floor(graphics.scw/map.tilesize + 1)
+	local ylimit = math.floor(graphics.sch/map.tilesize + 2) --fix weird issue (+ 0.5)
 	--check and correct x
 	local xlow = player.x-xlimit
 	local xhigh = player.x+xlimit
@@ -152,8 +153,6 @@ function love.rendermap(x,y)
 	if yhigh > map.blocksize then
 		yhigh = map.blocksize
 	end
-	
-	
 	for yer = ylow,yhigh do
 		for xer = xlow,xhigh do
 			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw + (player.xoffset*map.tilesize)
@@ -175,7 +174,6 @@ function love.generateblock(dt)
 		table.insert(map.loadedblock, {})
 		for x = 1,map.blocksize do
 			local value = love.math.noise(x,y )
-			
 			if value > 0.4 then
 				table.insert(map.loadedblock[y],0)
 			else
@@ -195,6 +193,7 @@ function love.drawcrosshairs()
 	--love.graphics.setColor( 255, 255, 255 )
 	local x = graphics.scw+(mousetilex*map.tilesize) + (player.xoffset*map.tilesize)
 	local y = graphics.sch+(mousetiley*map.tilesize) + (player.yoffset*map.tilesize)
+	love.graphics.print(mousetilex.."|"..mousetiley,mousex,mousey)
 	love.graphics.rectangle( "line",x,y, map.tilesize, map.tilesize)
 	--[[
 	if player.moveaim[1] ~= 0 and player.moveaim[2] ~= 0 then

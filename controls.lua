@@ -123,6 +123,7 @@ function player.movement(dt)
 	end
 	--move the player to the next tile
 	if move == true then
+		--print("moving")
 		player.xoffset = 0
 		player.yoffset = 0
 		player.x = player.path[1][1]
