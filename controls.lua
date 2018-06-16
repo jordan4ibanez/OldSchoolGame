@@ -6,6 +6,11 @@ function love.keypressed(key, unicode)
 		love.audio.play(watchdog)
 	end
 	
+	--toggle debug info
+	if key == "tab" then
+		debug = not debug
+	end
+	
 	--toggle running when standing still
 	if key == "r" and table.getn(player.path) == 0 then
 		if player.xoffset == 0 and player.yoffset == 0 then

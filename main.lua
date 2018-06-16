@@ -1,4 +1,5 @@
 --handle blocks seemlessly somehow?? dump all map on screen into table?
+debug = false
 
 dofile("helpers.lua")
 
@@ -47,7 +48,7 @@ graphics = {}
 function love.load()
 	--keep the multiplier odd to render out all possible tiles
 	love.window.setMode( 0, 0, {resizable=true,fullscreen=false} )
-	love.window.setTitle("Old School Game")
+	love.window.setTitle("New Rhode Island")
 	
 	love.graphics.setNewFont(20)
 
@@ -80,17 +81,19 @@ function love.draw(dt)
 	love.drawcrosshairs()
 	
 	--debug info
-	local lwidth,lheight = love.window.getMode()
-	love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL\nToggle Run:R", 0,lheight-140)
-	love.graphics.print("Move Aim:"..player.moveaim[1]..","..player.moveaim[2],0,0)
-	love.graphics.print("Mouse Tile:"..(player.x+mousetilex)..","..(player.y+mousetiley),0,20)
-	love.graphics.print("Movement Selection Cooldown:"..player.mcooldown,0,40)
-	love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
-	love.graphics.print("Running:"..tostring(player.running),0,80)
-	love.graphics.print("FPS:"..love.timer.getFPS( ),0,100)
-	love.graphics.print("ZOOM:"..map.tilesize,0,120)
-	love.graphics.print("OFFSETX:"..player.xoffset,0,140)
-	love.graphics.print("OFFSETY:"..player.yoffset,0,160)
+	if debug == true then
+		local lwidth,lheight = love.window.getMode()
+		love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL\nToggle Run:R", 0,lheight-140)
+		love.graphics.print("Move Aim:"..player.moveaim[1]..","..player.moveaim[2],0,0)
+		love.graphics.print("Mouse Tile:"..(player.x+mousetilex)..","..(player.y+mousetiley),0,20)
+		love.graphics.print("Movement Selection Cooldown:"..player.mcooldown,0,40)
+		love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
+		love.graphics.print("Running:"..tostring(player.running),0,80)
+		love.graphics.print("FPS:"..love.timer.getFPS( ),0,100)
+		love.graphics.print("ZOOM:"..map.tilesize,0,120)
+		love.graphics.print("OFFSETX:"..player.xoffset,0,140)
+		love.graphics.print("OFFSETY:"..player.yoffset,0,160)
+	end
 	
 end
 
@@ -109,21 +112,23 @@ end
 function love.drawdebugpath()
 	
 	if table.getn(player.path) > 0 then
-		local filler = true
 		for _,block in pairs(player.path) do
 			--block[1] block[2]
 			--print(dump(player.path[i]))
 			local posx = ((block[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw + (player.xoffset*map.tilesize)
 			local posy = ((block[2]-player.y+1)*map.tilesize)-map.tilesize + graphics.sch + (player.yoffset*map.tilesize)
-			love.graphics.setColor( 255, 0, 0 )
-			if filler == true then
-				love.graphics.rectangle( "fill", posx,posy, map.tilesize, map.tilesize)
-			else
+			
+			if debug == true then
+				love.graphics.setColor( 255, 0, 0 )
+
 				love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+				love.graphics.setColor(255,255,255)
+			elseif debug == false then
+				love.graphics.setColor( 200, 200, 200)
+				love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+				love.graphics.setColor(255,255,255)
 			end
-			love.graphics.setColor(255,255,255)
-			filler = not filler
-		end	
+		end		
 	end
 end
 
@@ -210,4 +215,5 @@ end
 
 dofile("controls.lua")
 dofile("pathfind.lua")
+dofile("gui.lua")
 
