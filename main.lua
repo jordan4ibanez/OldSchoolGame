@@ -193,8 +193,8 @@ function love.drawcrosshairs()
 	--love.graphics.setColor( 255, 255, 255 )
 	local x = graphics.scw+(mousetilex*map.tilesize) + (player.xoffset*map.tilesize)
 	local y = graphics.sch+(mousetiley*map.tilesize) + (player.yoffset*map.tilesize)
-	love.graphics.print(mousetilex.."|"..mousetiley,mousex,mousey)
-	love.graphics.rectangle( "line",x,y, map.tilesize, map.tilesize)
+	--love.graphics.print(mousetilex.."|"..mousetiley,mousex,mousey)
+	--love.graphics.rectangle( "line",x,y, map.tilesize, map.tilesize)
 	--[[
 	if player.moveaim[1] ~= 0 and player.moveaim[2] ~= 0 then
 		local posx = ((player.moveaim[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw

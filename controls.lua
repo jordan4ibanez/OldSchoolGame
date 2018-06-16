@@ -60,6 +60,8 @@ function love.mouseupdate(dt)
 		local newy = player.y+mousetiley
 		if newx > 0 and newx <= map.blocksize and newy > 0 and newy <= map.blocksize then
 			if map.loadedblock[newy][newx] == 0 then
+				player.xoffset = 0
+				player.yoffset = 0
 				player.moveaim = {newx,newy}
 				player.mcooldown = 0.5
 				--love.breakblock(player.moveaim[1],player.moveaim[2])
