@@ -136,8 +136,8 @@ end
 --this draws the map within the limits of the screen
 function love.rendermap(x,y)
 	--find the limits of what to render
-	local xlimit = math.floor(graphics.scw/map.tilesize + 1)
-	local ylimit = math.floor(graphics.sch/map.tilesize + 2) --fix weird issue (+ 0.5)
+	local xlimit = math.floor(graphics.scw/map.tilesize)+2
+	local ylimit = math.floor(graphics.sch/map.tilesize)+2 --fix weird issue (+ 0.5)
 	--check and correct x
 	local xlow = player.x-xlimit
 	local xhigh = player.x+xlimit
