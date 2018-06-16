@@ -67,7 +67,7 @@ function love.load()
 	moveno = love.audio.newSource("moveno.mp3", "static" )
 	watchdog = love.audio.newSource("WATCHDOG.wav", "stream" )
 	bgmusic = love.audio.newSource("sounds/1.mp3", "stream" )
-	
+	bgmusic:setLooping(true)
 	love.audio.play(bgmusic)
 
 	love.generateblock(dt,1,1)
