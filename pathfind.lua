@@ -48,8 +48,11 @@ function findpath(start,ending,limiter)
 	--local grid = Grid(map.loadedblock)
 	local grid = Grid(tempmap)
 
+	
 	-- Creates a pathfinder object using Jump Point Search algorithm
 	local myFinder = Pathfinder(grid, 'ASTAR', 0)
+	
+	myFinder:setMode('ORTHOGONAL')
 
 	-- Define start and goal locations coordinates
 	local startx, starty = center,center
