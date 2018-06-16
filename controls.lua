@@ -6,18 +6,20 @@ function love.keypressed(key, unicode)
 		love.audio.play(watchdog)
 	end
 	
-	--toggle running
-	if key == "r" then
-		--if player.xoffset == 0 and player.yoffset == 0 then
-		player.running = not player.running
-		--end
+	--toggle running when standing still
+	if key == "r" and table.getn(player.path) == 0 then
+		if player.xoffset == 0 and player.yoffset == 0 then
+			player.running = not player.running
+		end
 	end
 	
+	--[[
 	if key == "e" then
 		player.path = {}
 		player.xoffset = 0
 		player.yoffset = 0
 	end
+	]]--
 	
 	--end game
 	if key == 'escape' then
@@ -60,11 +62,13 @@ function love.mouseupdate(dt)
 		local newy = player.y+mousetiley
 		if newx > 0 and newx <= map.blocksize and newy > 0 and newy <= map.blocksize then
 			if map.loadedblock[newy][newx] == 0 then
-				player.xoffset = 0
-				player.yoffset = 0
-				player.moveaim = {newx,newy}
-				player.mcooldown = 0.5
-				--love.breakblock(player.moveaim[1],player.moveaim[2])
+				if player.xoffset == 0 and player.yoffset == 0 then
+					player.xoffset = 0
+					player.yoffset = 0
+					player.moveaim = {newx,newy}
+					player.mcooldown = 0.5
+					--love.breakblock(player.moveaim[1],player.moveaim[2])
+				end
 			end
 		end
 	end
@@ -90,6 +94,17 @@ end
 
 --move the character around
 function player.movement(dt)
+	--toggle running between tiles
+	if player.runbuffer == true and table.getn(player.path) > 0 then
+		if player.xoffset == 0 and player.yoffset == 0 then
+			player.runbuffer = false
+			player.running = not player.running
+		end
+	end
+	if  love.keyboard.isDown("r") and table.getn(player.path) > 0 then
+		player.runbuffer = true
+	end
+	
 	local subber = 0
 	if player.running == true then
 		subber = player.runspeed
