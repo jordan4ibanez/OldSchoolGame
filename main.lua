@@ -114,19 +114,30 @@ end
 function love.drawdebugpath()
 	
 	if table.getn(player.path) > 0 then
-		for _,block in pairs(player.path) do
+		for h,block in pairs(player.path) do
 			--block[1] block[2]
 			--print(dump(player.path[i]))
 			local posx = ((block[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw + (player.xoffset*map.tilesize)
 			local posy = ((block[2]-player.y+1)*map.tilesize)-map.tilesize + graphics.sch + (player.yoffset*map.tilesize)
-			
+			local filler = false
+			if h == table.getn(player.path) then
+				filler = true
+			end
 			if debug == true then
 				love.graphics.setColor( 255, 0, 0 )
-				love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+				if filler == true then
+					love.graphics.rectangle( "fill", posx,posy, map.tilesize, map.tilesize)
+				else
+					love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+				end
 				love.graphics.setColor(255,255,255)
 			elseif debug == false then
 				love.graphics.setColor( 200, 200, 200)
-				love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+				if filler == true then
+					love.graphics.rectangle( "fill", posx,posy, map.tilesize, map.tilesize)
+				else
+					love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+				end
 				love.graphics.setColor(255,255,255)
 			end
 		end		
