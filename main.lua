@@ -72,6 +72,7 @@ end
 
 function love.draw(dt)
 	love.rendermap(player.x,player.y)
+	love.drawdebugpath()
 	love.graphics.draw(graphics.player,graphics.scw,graphics.sch,0,map.tilesize/32,map.tilesize/32)
 	--this is a debug to show the center of the screen
 	--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
@@ -87,7 +88,9 @@ function love.draw(dt)
 	love.graphics.print("Running:"..tostring(player.running),0,80)
 	love.graphics.print("FPS:"..love.timer.getFPS( ),0,100)
 	love.graphics.print("ZOOM:"..map.tilesize,0,120)
-	love.drawdebugpath()
+	love.graphics.print("OFFSETX:"..player.xoffset,0,140)
+	love.graphics.print("OFFSETY:"..player.yoffset,0,160)
+	
 end
 
 function love.update(dt)
@@ -102,15 +105,22 @@ end
 
 --this is a debug to show path
 function love.drawdebugpath()
+	
 	if table.getn(player.path) > 0 then
+		local filler = true
 		for _,block in pairs(player.path) do
 			--block[1] block[2]
 			--print(dump(player.path[i]))
 			local posx = ((block[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw + (player.xoffset*map.tilesize)
 			local posy = ((block[2]-player.y+1)*map.tilesize)-map.tilesize + graphics.sch + (player.yoffset*map.tilesize)
 			love.graphics.setColor( 255, 0, 0 )
-			love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+			if filler == true then
+				love.graphics.rectangle( "fill", posx,posy, map.tilesize, map.tilesize)
+			else
+				love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
+			end
 			love.graphics.setColor(255,255,255)
+			filler = not filler
 		end	
 	end
 end
