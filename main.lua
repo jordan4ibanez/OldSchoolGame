@@ -65,8 +65,10 @@ function love.load()
 	footstep = love.audio.newSource("footstep.wav", "static" )
 	moveconfirm = love.audio.newSource("move.ogg", "static" )
 	moveno = love.audio.newSource("moveno.mp3", "static" )
-	bgmusic = love.audio.newSource("backgroundmusic.mp3", "stream" )
 	watchdog = love.audio.newSource("WATCHDOG.wav", "stream" )
+	bgmusic = love.audio.newSource("sounds/1.mp3", "stream" )
+	
+	love.audio.play(bgmusic)
 
 	love.generateblock(dt,1,1)
 	
@@ -120,7 +122,6 @@ function love.drawdebugpath()
 			
 			if debug == true then
 				love.graphics.setColor( 255, 0, 0 )
-
 				love.graphics.rectangle( "line", posx,posy, map.tilesize, map.tilesize)
 				love.graphics.setColor(255,255,255)
 			elseif debug == false then
