@@ -17,7 +17,7 @@ survival.Water  = math.random(50,100)
 resource_tick   = 0
 
 map = {}
-map.blocksize = 500 --length and width (don't set above 350 for pathfinding speed)
+map.blocksize = 5000 --length and width (don't set above 350 for pathfinding speed)
 map.loadedblock = {}
 map.tilesize = 32
 

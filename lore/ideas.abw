@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE abiword PUBLIC "-//ABISOURCE//DTD AWML 1.0 Strict//EN" "http://www.abisource.com/awml.dtd">
+<abiword template="false" xmlns:ct="http://www.abisource.com/changetracking.dtd" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:math="http://www.w3.org/1998/Math/MathML" xid-max="19" xmlns:dc="http://purl.org/dc/elements/1.1/" styles="unlocked" fileformat="1.0" xmlns:svg="http://www.w3.org/2000/svg" xmlns:awml="http://www.abisource.com/awml.dtd" xmlns="http://www.abisource.com/awml.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" version="0.99.2" xml:space="preserve" props="dom-dir:ltr; document-footnote-restart-section:0; document-endnote-type:numeric; document-endnote-place-enddoc:1; document-endnote-initial:1; lang:en-US; document-endnote-restart-section:0; document-footnote-restart-page:0; document-footnote-type:numeric; document-footnote-initial:1; document-endnote-place-endsection:0">
+<!-- ======================================================================== -->
+<!-- This file is an AbiWord document.                                        -->
+<!-- AbiWord is a free, Open Source word processor.                           -->
+<!-- More information about AbiWord is available at http://www.abisource.com/ -->
+<!-- You should not edit this file by hand.                                   -->
+<!-- ======================================================================== -->
+
+<metadata>
+<m key="abiword.date_last_changed">Sat Jun 16 02:42:50 2018
+</m>
+<m key="abiword.generator">AbiWord</m>
+<m key="dc.creator">Jordan</m>
+<m key="dc.date">Sat Jun 16 02:41:48 2018
+</m>
+<m key="dc.format">application/x-abiword</m>
+</metadata>
+<rdf>
+</rdf>
+<history version="3" edit-time="88" last-saved="1529131370" uid="4890d6e2-7130-11e8-9a07-f91b40c9f70a">
+<version id="3" started="1529131308" uid="7d443406-7130-11e8-9a07-f91b40c9f70a" auto="0" top-xid="4"/>
+</history>
+<styles>
+<s type="P" name="Normal" followedby="Current Settings" props="font-family:Times New Roman; margin-top:0pt; color:000000; margin-left:0pt; text-position:normal; widows:2; font-style:normal; text-indent:0in; font-variant:normal; font-weight:normal; margin-right:0pt; font-size:12pt; text-decoration:none; margin-bottom:0pt; line-height:1.0; bgcolor:transparent; text-align:left; font-stretch:normal"/>
+</styles>
+<pagesize pagetype="Letter" orientation="portrait" width="8.500000" height="11.000000" units="in" page-scale="1.000000"/>
+<section xid="3" props="page-margin-footer:0.5in; page-margin-header:0.5in">
+<p style="Normal" xid="4" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">Perks: </c></p>
+<p style="Normal" xid="11" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">lowboy - stealth </c></p>
+<p style="Normal" xid="12" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">highboy - higher chance of scaring enemies away </c></p>
+<p style="Normal" xid="13" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">Hi neighbor! - beer gives higher aggression + hit points -defense </c></p>
+<p style="Normal" xid="14" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">good boy - can befriend people easier </c></p>
+<p style="Normal" xid="15" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">bad boy - befriend women easier </c></p>
+<p style="Normal" xid="16" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">evil - scare away everything lower level than you </c></p>
+<p style="Normal" xid="17" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">Hooked on a feeling - pain killers + hard drugs give you + defense </c></p>
+<p style="Normal" xid="18" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">Forrest - Running speed decreased + stamina boosted </c></p>
+<p style="Normal" xid="19" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal">Mr Clinton - Easier to convince people</c></p>
+<p style="Normal" xid="9" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c></p>
+<p style="Normal" xid="10" props="font-family:Times New Roman; font-size:12pt; lang:en-US; text-position:normal; font-weight:normal; font-style:normal; text-decoration:none"><c props="font-weight:normal; color:000000; text-transform:none; font-size:12pt; font-style:normal"></c></p>
+<p style="Normal" xid="5"><c></c><c>Scary films to watch:</c></p>
+<p style="Normal" xid="1"><c>A boy and his dog</c></p>
+<p style="Normal" xid="2"><c>The day after</c></p>
+</section>
+</abiword>
