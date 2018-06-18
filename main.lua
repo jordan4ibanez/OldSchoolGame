@@ -44,22 +44,46 @@ player.sneakspeed = 0.01
 
 --graphics class
 graphics = {}
+graphics.fps = 10
+graphics.animtimer = 1/graphics.fps
+--player gets custom class var (for now) this will be turned into animation class
+graphics.playerframe = 0 --frame horizontally
+graphics.playerframeset = 0 --frameset (vertically)
+graphics.playermaxframes = 3 --counting from 0
+
+
+function graphics.animateplayer(dt)
+	if dt > 0.035 then
+		return
+	end
+	-- angle = angle + 27.5 * dt
+	graphics.animtimer = graphics.animtimer - dt
+	if graphics.animtimer <= 0 then
+		graphics.animtimer = 1 / graphics.fps
+		graphics.playerframe = graphics.playerframe + 1
+		if graphics.playerframe > graphics.playermaxframes then 
+			graphics.playerframe = 0
+		end
+		local xoffset = 32 * graphics.playerframe
+		print(map.tilesize)
+		graphics.playertexture:setViewport(xoffset,0, 32, 32)
+	end
+end
 
 function love.load()
 	--keep the multiplier odd to render out all possible tiles
 	love.window.setMode( 0, 0, {resizable=true,fullscreen=false} )
 	love.window.setTitle("New Rhode Island")
-	
 	love.graphics.setNewFont(20)
-
+	
     graphics.cobble = love.graphics.newImage("tiles/cobble.png")
     graphics.brick = love.graphics.newImage("tiles/brick.png")
-    graphics.player = love.graphics.newImage("player.png")
     --graphics.crosshair = love.graphics.newImage("crosshair.png")
-
+    graphics.playeratlas = love.graphics.newImage("characters/playertile.png")
+	graphics.playertexture = love.graphics.newQuad(0,0,map.tilesize,map.tilesize,graphics.playeratlas:getDimensions())
+    
+    
 	cursor = love.mouse.newCursor( "crosshair.png", 15, 15 )
-
-
 	love.mouse.setCursor( cursor )
 	
 	footstep = love.audio.newSource("footstep.wav", "static" )
@@ -67,17 +91,17 @@ function love.load()
 	moveno = love.audio.newSource("moveno.mp3", "static" )
 	watchdog = love.audio.newSource("WATCHDOG.wav", "stream" )
 	bgmusic = love.audio.newSource("sounds/1.mp3", "stream" )
+	
 	bgmusic:setLooping(true)
 	love.audio.play(bgmusic)
-
-	love.generateblock(dt,1,1)
 	
+	love.generateblock(dt,1,1)
 end
 
 function love.draw(dt)
 	love.rendermap(player.x,player.y)
 	love.drawdebugpath()
-	love.graphics.draw(graphics.player,graphics.scw,graphics.sch,0,map.tilesize/32,map.tilesize/32)
+	love.graphics.draw(graphics.playeratlas,graphics.playertexture,graphics.scw,graphics.sch,0,map.tilesize/32,map.tilesize/32)
 	--this is a debug to show the center of the screen
 	--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
 	love.drawcrosshairs()
@@ -108,6 +132,7 @@ function love.update(dt)
 	player.movement(dt)
 	love.mouseupdate(dt)
 	
+	graphics.animateplayer(dt)
 end
 
 --this is a debug to show path

@@ -80,7 +80,7 @@ function findpath(start,ending,limiter)
 		end
 		for node, count in path:nodes() do
 			--print(('Step: %d - x: %d - y: %d'):format(count, node:getX(), node:getY()))
-			print(('MODIFIED Step: %d - x: %d - y: %d'):format(count, node:getX()+realstartx, node:getY()+realstarty))
+			--print(('MODIFIED Step: %d - x: %d - y: %d'):format(count, node:getX()+realstartx, node:getY()+realstarty))
 			
 			table.insert(player.path, {node:getX()+realstartx, node:getY()+realstarty})
 		end
