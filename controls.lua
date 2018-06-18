@@ -12,10 +12,15 @@ function love.keypressed(key, unicode)
 	end
 	
 	--toggle running when standing still
-	if key == "r" and table.getn(player.path) == 0 then
-		if player.xoffset == 0 and player.yoffset == 0 then
-			player.running = not player.running
+	if key == "r" then
+		if table.getn(player.path) == 0 then
+			if player.xoffset == 0 and player.yoffset == 0 then
+				player.running = not player.running
+			end
+		else
+			player.runbuffer = true
 		end
+		
 	end
 	
 	--[[
@@ -105,9 +110,6 @@ function player.movement(dt)
 			player.runbuffer = false
 			player.running = not player.running
 		end
-	end
-	if  love.keyboard.isDown("r") and table.getn(player.path) > 0 then
-		player.runbuffer = true
 	end
 	
 	local subber = 0
