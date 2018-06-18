@@ -44,15 +44,36 @@ player.sneakspeed = 0.01
 
 --graphics class
 graphics = {}
-graphics.fps = 10
+graphics.fps = 5
 graphics.animtimer = 1/graphics.fps
 --player gets custom class var (for now) this will be turned into animation class
 graphics.playerframe = 0 --frame horizontally
 graphics.playerframeset = 0 --frameset (vertically)
 graphics.playermaxframes = 3 --counting from 0
 
-
+--animate the player
 function graphics.animateplayer(dt)
+	--set speed based on if running 
+	if player.running == true then
+		graphics.fps = 10
+	else
+		graphics.fps = 5
+	end
+
+	--set animation based on direction else idle
+	if table.getn(player.path) > 0 then
+		if player.x < player.path[1][1] then
+			graphics.playerframeset = 1
+		elseif player.x > player.path[1][1] then
+			graphics.playerframeset = 2
+		elseif player.y < player.path[1][2] then
+			graphics.playerframeset = 3
+		elseif player.y > player.path[1][2] then
+			graphics.playerframeset = 4			
+		end
+	else
+		graphics.playerframeset = 0
+	end
 	if dt > 0.035 then
 		return
 	end
@@ -65,8 +86,7 @@ function graphics.animateplayer(dt)
 			graphics.playerframe = 0
 		end
 		local xoffset = 32 * graphics.playerframe
-		print(map.tilesize)
-		graphics.playertexture:setViewport(xoffset,0, 32, 32)
+		graphics.playertexture:setViewport(xoffset,graphics.playerframeset * 32, 32, 32)
 	end
 end
 
