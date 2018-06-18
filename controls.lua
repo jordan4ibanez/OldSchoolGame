@@ -4,6 +4,7 @@ function love.keypressed(key, unicode)
 		--bring up WATCHDOG with this
 		love.audio.stop(watchdog)
 		love.audio.play(watchdog)
+		paused = not paused
 	end
 	
 	--toggle debug info

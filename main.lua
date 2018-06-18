@@ -7,14 +7,18 @@ love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
 
 math.randomseed(os.time())
 
+
+paused = false
+
 local survival = {}
 
 --make time it's own thing
-survival.Hunger = math.random(70,100)
-survival.Thirst = math.random(50,100)
-survival.Fuel   = math.random(30,100)
-survival.Meat   = math.random(50,100)
-survival.Water  = math.random(50,100)
+survival.health = math.random(70,100)
+survival.hunger = math.random(70,100)
+survival.thirst = math.random(50,100)
+survival.fuel   = math.random(30,100)
+survival.meat   = math.random(50,100)
+survival.water  = math.random(50,100)
 resource_tick   = 0
 
 map = {}
@@ -100,8 +104,12 @@ function love.load()
     graphics.brick = love.graphics.newImage("tiles/brick.png")
     --graphics.crosshair = love.graphics.newImage("crosshair.png")
     graphics.playeratlas = love.graphics.newImage("characters/playertile.png")
+    graphics.WATCHDOG = love.graphics.newImage("characters/WATCHDOG.png")
 	graphics.playertexture = love.graphics.newQuad(0,0,map.tilesize,map.tilesize,graphics.playeratlas:getDimensions())
     
+    superbigfont = love.graphics.newFont("fonts/SFPixelate.ttf", 100)
+    normalfont = love.graphics.newFont("fonts/SFPixelate.ttf", 24)
+    love.graphics.setFont(normalfont)
     
 	cursor = love.mouse.newCursor( "crosshair.png", 15, 15 )
 	love.mouse.setCursor( cursor )
@@ -119,28 +127,32 @@ function love.load()
 end
 
 function love.draw(dt)
-	love.rendermap(player.x,player.y)
-	love.drawdebugpath()
-	love.graphics.draw(graphics.playeratlas,graphics.playertexture,graphics.scw,graphics.sch,0,map.tilesize/32,map.tilesize/32)
-	--this is a debug to show the center of the screen
-	--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
-	love.drawcrosshairs()
+	if paused == true then
+		love.drawpausemenu()
+	else
 	
-	--debug info
-	if debug == true then
-		local lwidth,lheight = love.window.getMode()
-		love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL\nToggle Run:R", 0,lheight-140)
-		love.graphics.print("Move Aim:"..player.moveaim[1]..","..player.moveaim[2],0,0)
-		love.graphics.print("Mouse Tile:"..(player.x+mousetilex)..","..(player.y+mousetiley),0,20)
-		love.graphics.print("Movement Selection Cooldown:"..player.mcooldown,0,40)
-		love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
-		love.graphics.print("Running:"..tostring(player.running),0,80)
-		love.graphics.print("FPS:"..love.timer.getFPS( ),0,100)
-		love.graphics.print("ZOOM:"..map.tilesize,0,120)
-		love.graphics.print("OFFSETX:"..player.xoffset,0,140)
-		love.graphics.print("OFFSETY:"..player.yoffset,0,160)
+		love.rendermap(player.x,player.y)
+		love.drawdebugpath()
+		love.graphics.draw(graphics.playeratlas,graphics.playertexture,graphics.scw,graphics.sch,0,map.tilesize/32,map.tilesize/32)
+		--this is a debug to show the center of the screen
+		--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
+		love.drawcrosshairs()
+		
+		--debug info
+		if debug == true then
+			local lwidth,lheight = love.window.getMode()
+			love.graphics.print("This is a proof of concept build.\nCONTROLS\nToggle Fullscreen:~\nQuit:Escape\nRestart Game:Left CTRL\nToggle Run:R", 0,lheight-140)
+			love.graphics.print("Move Aim:"..player.moveaim[1]..","..player.moveaim[2],0,0)
+			love.graphics.print("Mouse Tile:"..(player.x+mousetilex)..","..(player.y+mousetiley),0,20)
+			love.graphics.print("Movement Selection Cooldown:"..player.mcooldown,0,40)
+			love.graphics.print("Movement Cooldown:"..player.pathcooldown,0,60)
+			love.graphics.print("Running:"..tostring(player.running),0,80)
+			love.graphics.print("FPS:"..love.timer.getFPS( ),0,100)
+			love.graphics.print("ZOOM:"..map.tilesize,0,120)
+			love.graphics.print("OFFSETX:"..player.xoffset,0,140)
+			love.graphics.print("OFFSETY:"..player.yoffset,0,160)
+		end
 	end
-	
 end
 
 function love.update(dt)
@@ -149,10 +161,25 @@ function love.update(dt)
 	graphics.screenw = love.graphics.getWidth()
 	graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
 	graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
-	player.movement(dt)
-	love.mouseupdate(dt)
 	
-	graphics.animateplayer(dt)
+	--do pause or don't
+	if paused == true then
+		
+	else
+		player.movement(dt)
+		love.mouseupdate(dt)
+		graphics.animateplayer(dt)
+	end
+end
+
+--this draws the pausemenu
+function love.drawpausemenu()
+	local wx,wy = graphics.WATCHDOG:getDimensions()
+	love.graphics.draw(graphics.WATCHDOG,0,graphics.screenh-wy)
+	love.graphics.setFont(superbigfont)
+	love.graphics.print("W.A.T.C.H.D.O.G.",wx+10,graphics.screenh-80)
+	love.graphics.setFont(normalfont)
+	love.graphics.print("HEALTH:"..survival.health,0,10)
 end
 
 --this is a debug to show path
