@@ -6,12 +6,12 @@ function love.keypressed(key, unicode)
 		love.audio.play(watchdog)
 		paused = not paused
 	end
-	
+
 	--toggle debug info
 	if key == "tab" then
 		debug = not debug
 	end
-	
+
 	--toggle running when standing still
 	if key == "r" then
 		if table.getn(player.path) == 0 then
@@ -21,9 +21,9 @@ function love.keypressed(key, unicode)
 		else
 			player.runbuffer = true
 		end
-		
+
 	end
-	
+
 	--[[
 	if key == "e" then
 		player.path = {}
@@ -31,7 +31,7 @@ function love.keypressed(key, unicode)
 		player.yoffset = 0
 	end
 	]]--
-	
+
 	--end game
 	if key == 'escape' then
 		love.event.quit()
@@ -44,11 +44,11 @@ function love.keypressed(key, unicode)
 	if key == "`" then
 		local width, height, flags = love.window.getMode( )
 		love.window.setMode( width, height, {fullscreen=not flags.fullscreen,resizable=true})
-	end 
+	end
 end
 
 
-function love.breakblock(x,y)	
+function love.breakblock(x,y)
 	if x > 0 and x <= map.blocksize and y > 0 and y <= map.blocksize then
 		map.loadedblock[y][x] = 0
 	end
@@ -57,7 +57,7 @@ end
 function love.mouseupdate(dt)
 	mousex, mousey = love.mouse.getPosition( )
 	local down1 = love.mouse.isDown(1)
-	
+
 	--get which tile the player is on
 	if mousex and mousey then
 		mousetilex = math.floor((mousex-graphics.scw - (player.xoffset*map.tilesize))/map.tilesize)
@@ -65,7 +65,7 @@ function love.mouseupdate(dt)
 	else
 		mousetilex, mousetiley = 0,0
 	end
-	
+
 	--the movement aim tile
 	local oldmove = player.moveaim
 	if down1 and player.mcooldown == 0 then
@@ -112,7 +112,7 @@ function player.movement(dt)
 			player.running = not player.running
 		end
 	end
-	
+
 	local subber = 0
 	if player.running == true then
 		subber = player.runspeed
@@ -124,7 +124,7 @@ function player.movement(dt)
 	if table.getn(player.path) > 0 then
 		if player.x ~= player.path[1][1] then
 			--move the offset of the screen
-			if player.x > player.path[1][1] then					
+			if player.x > player.path[1][1] then
 				player.xoffset = player.xoffset + subber
 			elseif player.x < player.path[1][1] then
 				player.xoffset = player.xoffset - subber
@@ -135,7 +135,7 @@ function player.movement(dt)
 			end
 		elseif player.y ~= player.path[1][2] then
 			--move the offset of the screen
-			if player.y > player.path[1][2] then					
+			if player.y > player.path[1][2] then
 				player.yoffset = player.yoffset + subber
 			elseif player.y < player.path[1][2] then
 				player.yoffset = player.yoffset - subber
@@ -153,15 +153,16 @@ function player.movement(dt)
 		player.yoffset = 0
 		player.x = player.path[1][1]
 		player.y = player.path[1][2]
+		footstep:setPitch(math.random(80,100)/100)
 		love.audio.stop(footstep)
 		love.audio.play(footstep)
 		table.remove(player.path,1)
 	end
-	
-	
+
+
 	--if player.pathcooldown > 0 then
 	--	player.pathcooldown = player.pathcooldown - subber
-		
+
 		--if player.pathcooldown < 0 then
 		--	player.pathcooldown = 0
 		--end
@@ -169,7 +170,7 @@ function player.movement(dt)
 	--[[
 	if player.pathcooldown == 0 then
 		if table.getn(player.path) > 0 then
-			
+
 			--make it so player's walk cycle doesn't get broken
 			if player.pathcooldown == 0 then
 				if player.running == true then
@@ -178,7 +179,7 @@ function player.movement(dt)
 					player.pathcooldown = player.walkspeed
 				end
 			end
-			
+
 			--do this so sounds don't conflict
 			if player.x ~= player.path[1][1] or player.y ~= player.path[1][2] then
 				player.x = player.path[1][1]

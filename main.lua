@@ -57,7 +57,7 @@ graphics.playermaxframes = 3 --counting from 0
 
 --animate the player
 function graphics.animateplayer(dt)
-	--set speed based on if running 
+	--set speed based on if running
 	if player.running == true then
 		graphics.fps = 10
 	else
@@ -73,7 +73,7 @@ function graphics.animateplayer(dt)
 		elseif player.y < player.path[1][2] then
 			graphics.playerframeset = 3
 		elseif player.y > player.path[1][2] then
-			graphics.playerframeset = 4			
+			graphics.playerframeset = 4
 		end
 	else
 		graphics.playerframeset = 0
@@ -86,7 +86,7 @@ function graphics.animateplayer(dt)
 	if graphics.animtimer <= 0 then
 		graphics.animtimer = 1 / graphics.fps
 		graphics.playerframe = graphics.playerframe + 1
-		if graphics.playerframe > graphics.playermaxframes then 
+		if graphics.playerframe > graphics.playermaxframes then
 			graphics.playerframe = 0
 		end
 		local xoffset = 32 * graphics.playerframe
@@ -99,30 +99,33 @@ function love.load()
 	love.window.setMode( 0, 0, {resizable=true,fullscreen=false} )
 	love.window.setTitle("New Rhode Island")
 	love.graphics.setNewFont(20)
-	
+
     graphics.cobble = love.graphics.newImage("tiles/cobble.png")
     graphics.brick = love.graphics.newImage("tiles/brick.png")
     --graphics.crosshair = love.graphics.newImage("crosshair.png")
     graphics.playeratlas = love.graphics.newImage("characters/playertile.png")
     graphics.WATCHDOG = love.graphics.newImage("characters/WATCHDOG.png")
 	graphics.playertexture = love.graphics.newQuad(0,0,map.tilesize,map.tilesize,graphics.playeratlas:getDimensions())
-    
+
     superbigfont = love.graphics.newFont("fonts/SFPixelate.ttf", 100)
     normalfont = love.graphics.newFont("fonts/SFPixelate.ttf", 24)
     love.graphics.setFont(normalfont)
-    
+
 	cursor = love.mouse.newCursor( "crosshair.png", 15, 15 )
 	love.mouse.setCursor( cursor )
-	
+
 	footstep = love.audio.newSource("footstep.wav", "static" )
+	footstep:setVolume(0.2)
 	moveconfirm = love.audio.newSource("move.ogg", "static" )
 	moveno = love.audio.newSource("moveno.mp3", "static" )
 	watchdog = love.audio.newSource("WATCHDOG.wav", "stream" )
+	watchdog:setVolume(0.2)
+
 	bgmusic = love.audio.newSource("sounds/1.mp3", "stream" )
-	
+
 	bgmusic:setLooping(true)
 	love.audio.play(bgmusic)
-	
+
 	love.generateblock(dt,1,1)
 end
 
@@ -130,14 +133,14 @@ function love.draw(dt)
 	if paused == true then
 		love.drawpausemenu()
 	else
-	
+
 		love.rendermap(player.x,player.y)
 		love.drawdebugpath()
 		love.graphics.draw(graphics.playeratlas,graphics.playertexture,graphics.scw,graphics.sch,0,map.tilesize/32,map.tilesize/32)
 		--this is a debug to show the center of the screen
 		--love.graphics.circle( "fill", graphics.screenw/2, graphics.screenh/2, 3 )
 		love.drawcrosshairs()
-		
+
 		--debug info
 		if debug == true then
 			local lwidth,lheight = love.window.getMode()
@@ -156,15 +159,15 @@ function love.draw(dt)
 end
 
 function love.update(dt)
-	--update screen integers 
+	--update screen integers
 	graphics.screenh = love.graphics.getHeight()
 	graphics.screenw = love.graphics.getWidth()
 	graphics.sch = (graphics.screenh/2) - (map.tilesize/2)
 	graphics.scw = (graphics.screenw/2) - (map.tilesize/2)
-	
+
 	--do pause or don't
 	if paused == true then
-		
+
 	else
 		player.movement(dt)
 		love.mouseupdate(dt)
@@ -184,7 +187,7 @@ end
 
 --this is a debug to show path
 function love.drawdebugpath()
-	
+
 	if table.getn(player.path) > 0 then
 		for h,block in pairs(player.path) do
 			--block[1] block[2]
@@ -212,7 +215,7 @@ function love.drawdebugpath()
 				end
 				love.graphics.setColor(255,255,255)
 			end
-		end		
+		end
 	end
 end
 
@@ -232,7 +235,7 @@ function love.rendermap(x,y)
 	if xhigh > map.blocksize then
 		xhigh = map.blocksize
 	end
-	
+
 	local ylow = player.y-ylimit
 	local yhigh = player.y+ylimit
 	--yhigh = yhigh - 1 --remove this !!!!!!!!!!!
@@ -248,13 +251,13 @@ function love.rendermap(x,y)
 			local posx = ((xer-x+1)*map.tilesize)-map.tilesize + graphics.scw + (player.xoffset*map.tilesize)
 			local posy = ((yer-y+1)*map.tilesize)-map.tilesize + graphics.sch + (player.yoffset*map.tilesize)
 			if map.loadedblock[yer][xer] == 0 then
-				love.graphics.draw(graphics.cobble, posx,posy,0,map.tilesize/32,map.tilesize/32) 
+				love.graphics.draw(graphics.cobble, posx,posy,0,map.tilesize/32,map.tilesize/32)
 			elseif map.loadedblock[yer][xer] == 1 then
-				love.graphics.draw(graphics.brick, posx,posy,0,map.tilesize/32,map.tilesize/32) 
+				love.graphics.draw(graphics.brick, posx,posy,0,map.tilesize/32,map.tilesize/32)
 			end
-		
+
 		end
-	end	
+	end
 end
 
 --generates map block in memory
@@ -285,7 +288,7 @@ function love.drawcrosshairs()
 	local y = graphics.sch+(mousetiley*map.tilesize) + (player.yoffset*map.tilesize)
 	love.graphics.rectangle( "line",x,y, map.tilesize, map.tilesize)
 	--love.graphics.print(mousetilex.."|"..mousetiley,mousex,mousey)
-	
+
 	--[[
 	if player.moveaim[1] ~= 0 and player.moveaim[2] ~= 0 then
 		local posx = ((player.moveaim[1]-player.x+1)*map.tilesize)-map.tilesize + graphics.scw
@@ -300,4 +303,3 @@ end
 dofile("controls.lua")
 dofile("pathfind.lua")
 dofile("gui.lua")
-
